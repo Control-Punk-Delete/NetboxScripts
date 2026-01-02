@@ -9,16 +9,18 @@ from ipam.choices import IPAddressStatusChoices
  
 
 
-def resolve_dns_record(record):
-    try:
-        answers = dns.resolver.resolve(record, 'A')
-        ip_addresses = [answer.to_text() for answer in answers]
-        return ip_addresses
-    except Exception as e:
-        raise AbortScript(e)
+
 
 
 class DnsResolve(Script):
+
+    def resolve_dns_record(self, record):
+        try:
+            answers = dns.resolver.resolve(record, 'A')
+            ip_addresses = [answer.to_text() for answer in answers]
+            return ip_addresses
+        except Exception as e:
+            raise AbortScript(e)
 
     def ip_exists(self, ip_address):  
         return IPAddress.objects.filter(address=str(ip_address)).exists() 
@@ -41,7 +43,7 @@ class DnsResolve(Script):
     def run(self, data, commit):
 
         fqdn = data['fqdn'][:-1]
-        resolved_ips = resolve_dns_record(fqdn)
+        resolved_ips = self.resolve_dns_record(fqdn)
 
         # For each resolved IP, chek is it in the database
 
