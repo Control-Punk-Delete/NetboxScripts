@@ -53,7 +53,7 @@ class DnsResolve(Script):
 
             else:  
                 self.log_info(f"Creating IP {ip_to_check}")  
-                new_ip = self.create_ip_address(ip_to_check, commit=commit, tenant=data['tenant']['id'])  
+                new_ip = self.create_ip_address(ip_to_check, commit=commit)  
                 if commit:  
                     self.log_success(f"Created IP {new_ip.address} (ID: {new_ip.id})")
                     ip_address_ids.append(new_ip.id)
