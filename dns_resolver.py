@@ -1,7 +1,6 @@
 
 from dcim.models import IPAddress
-from extras.scripts import Script
-
+from extras.scripts import Script, StringVar
 
 class DnsResolve(Script):
      
