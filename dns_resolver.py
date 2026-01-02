@@ -11,4 +11,4 @@ class DnsResolve(Script):
 
         if data['dns_record'] == "test":
             raise AbortScript("Empty DNS record provided")
-        self.log_success("Hello World: ", data['dns_record'])
+        self.log_success(f"Hello World: {data['dns_record']}")
