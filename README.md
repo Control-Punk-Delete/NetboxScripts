@@ -4,8 +4,9 @@
 
 ## Requiroments
 
-- netbox_dns - plugin
+- netbox_dns - plugin https://github.com/peteeckel/netbox-plugin-dns
 - ip_address - custom field | type multiselect object IP Address
+- dnspython - python lib
 
 ## Trigers
 
@@ -19,6 +20,8 @@ DNS Record
 
 ## Script Logic
 
+
+1. Get DNS fqdn[:1]
 1. Make dns resolve of input `DNS Record`
 
 2. Get All IP address that returned  and creat `resolved_ip_list[]`
