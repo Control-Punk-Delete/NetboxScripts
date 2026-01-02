@@ -9,7 +9,6 @@ class DnsResolve(Script):
 
     def run(self, data, commit):
 
-        if not data['dns_recor']:
+        if not data['dns_record']:
             raise AbortScript("Empty DNS record provided")
-        self.log_success("Hello World", self.dns_record)
-
+        self.log_success("Hello World: ", data['dns_record'])
