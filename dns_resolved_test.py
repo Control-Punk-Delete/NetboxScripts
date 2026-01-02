@@ -2,7 +2,7 @@ import dns.resolver
 
 from extras.scripts import *
 from ipam.models import IPAddress
-#from netbox_dns.models import DNSRecord
+from plugins.netbox_dns.models import DNSRecord
 from utilities.exceptions import AbortScript
 from ipam.choices import IPAddressStatusChoices  
 
