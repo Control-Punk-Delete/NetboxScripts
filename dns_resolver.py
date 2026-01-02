@@ -2,16 +2,11 @@ import dns.resolver
 
 from extras.scripts import *
 from ipam.models import IPAddress
-from netbox_dns.models import DNSRecord
+from netbox_dns.models import (Record)
 from utilities.exceptions import AbortScript
 from ipam.choices import IPAddressStatusChoices  
 
  
-
-
-
-
-
 class DnsResolve(Script):
 
     def resolve_dns_record(self, record):
@@ -66,7 +61,7 @@ class DnsResolve(Script):
 
 
         # Get the DNS record  
-        dns_record = DNSRecord.objects.get(pk=data['id'])  
+        dns_record = Record.objects.get(pk=data['id'])  
 
         current_ips = []
 

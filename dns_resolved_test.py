@@ -9,5 +9,6 @@ from utilities.exceptions import AbortScript
 
  
 class DnsResolve(Script):
+    
     def run(self, data, commit):
         self.log_success(f"Hello World: {data}")
