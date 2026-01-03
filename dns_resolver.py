@@ -59,7 +59,7 @@ class DnsResolve(Script):
             for ip in data['custom_fields']['ip_address']:
                 current_ips.append(ip.id)
 
-        list_of_new_ips =  set(current_ips + ip_address_ids)
+        list_of_new_ips =  list(set(current_ips + ip_address_ids))
           
         # Update the custom field  
         dns_record.custom_field_data['ip_address'] =  list_of_new_ips  
