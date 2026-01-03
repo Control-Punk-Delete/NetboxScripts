@@ -26,8 +26,8 @@ class DnsResolve(Script):
             address=str(ip_address),  
             status=kwargs.get('status', IPAddressStatusChoices.STATUS_ACTIVE),  
             vrf=kwargs.get('vrf'),  
-            tenant=kwargs.get('tenant'),  
-            role=kwargs.get('role'),  
+            #tenant=kwargs.get('tenant'),  
+            #role=kwargs.get('role'),  
             dns_name=kwargs.get('dns_name'),  
             description=kwargs.get('description')  
         )  
