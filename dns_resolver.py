@@ -17,24 +17,6 @@ class DnsResolve(Script):
         except Exception as e:
             raise AbortScript(e)
 
-    def ip_exists(self, ip_address):  
-        return IPAddress.objects.filter(address=str(ip_address)).exists() 
-    
-    def create_ip_address(self, ip_address, **kwargs):  
-        """Create new IP address with optional parameters"""  
-        ip = IPAddress(  
-            address=str(ip_address),  
-            status=kwargs.get('status', IPAddressStatusChoices.STATUS_ACTIVE),  
-            vrf=kwargs.get('vrf'),  
-            #tenant=kwargs.get('tenant'),  
-            #role=kwargs.get('role'),  
-            dns_name=kwargs.get('dns_name'),  
-            description=kwargs.get('description')  
-        )  
-          
-        ip.save()  
-        return ip  
-
     def run(self, data, commit):
 
         fqdn = data['fqdn'][:-1]
@@ -46,19 +28,20 @@ class DnsResolve(Script):
 
 
         for ip_to_check in resolved_ips:
-            if self.ip_exists(ip_to_check):  
+            if IPAddress.objects.filter(ip_to_check).exists():  
                 self.log_success(f"IP {ip_to_check} already exists in database")  
                 existing_ip = IPAddress.objects.get(address=str(ip_to_check))
                 ip_address_ids.append(existing_ip.id)
 
             else:  
-                self.log_info(f"Creating IP {ip_to_check}")  
-                new_ip = self.create_ip_address(ip_to_check, commit=commit, tenant=data['tenant']['name'])  
-                if commit:  
-                    self.log_success(f"Created IP {new_ip.address} (ID: {new_ip.id})")
-                    ip_address_ids.append(new_ip.id)
-                else:  
-                    self.log_info(f"Would create IP {new_ip.address} (dry run)") 
+                self.log_info(f"Creating IP {ip_to_check}")
+
+                ip = IPAddress( address=ip_to_check,  
+                                status=IPAddressStatusChoices.STATUS_ACTIVE)
+                ip.full_clean()
+                ip.save()
+                ip_address_ids.append(ip.id)
+                self.log_success(f"Created IP {ip_to_check} with ID {ip.id}")
 
 
         # Get the DNS record  
