@@ -62,7 +62,7 @@ class DnsResolve(Script):
         list_of_new_ips =  set(current_ips + ip_address_ids)
           
         # Update the custom field  
-        dns_record.custom_field_data['ip_addresses'] = list_of_new_ips  
+        dns_record.custom_field_data['ip_address'] =  list_of_new_ips  
           
         if commit:  
             dns_record.save()  
