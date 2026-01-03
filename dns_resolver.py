@@ -20,7 +20,7 @@ class DnsResolve(Script):
     def ip_exists(self, ip_address):  
         return IPAddress.objects.filter(address=str(ip_address)).exists() 
     
-    def create_ip_address(self, ip_address, commit, **kwargs):  
+    def create_ip_address(self, ip_address, **kwargs):  
         """Create new IP address with optional parameters"""  
         ip = IPAddress(  
             address=str(ip_address),  
@@ -31,8 +31,8 @@ class DnsResolve(Script):
             dns_name=kwargs.get('dns_name'),  
             description=kwargs.get('description')  
         )  
-        if commit:  
-            ip.save()  
+          
+        ip.save()  
         return ip  
 
     def run(self, data, commit):
@@ -53,7 +53,7 @@ class DnsResolve(Script):
 
             else:  
                 self.log_info(f"Creating IP {ip_to_check}")  
-                new_ip = self.create_ip_address(ip_to_check, commit=commit)  
+                new_ip = self.create_ip_address(ip_to_check, commit=commit, tenant=data['tenant']['name'])  
                 if commit:  
                     self.log_success(f"Created IP {new_ip.address} (ID: {new_ip.id})")
                     ip_address_ids.append(new_ip.id)
