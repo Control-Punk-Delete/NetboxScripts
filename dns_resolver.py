@@ -33,6 +33,7 @@ class DnsResolve(Script):
             if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
                 self.log_info(f"IP {ip_to_check} already exists in database")  
                 existing_ip = IPAddress.objects.get(address=str(ip_to_check))
+
                 ip_address_ids.append(existing_ip.id)
                 self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
 
@@ -46,7 +47,7 @@ class DnsResolve(Script):
                 ip.save()
 
                 ip_address_ids.append(ip.id)
-                self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
+                self.log_debug(f"Appended new created ip {ip.id} ")
 
         self.log_info(f"Final list of IP address IDs to associate: {ip_address_ids}")
         # Get the DNS record  
