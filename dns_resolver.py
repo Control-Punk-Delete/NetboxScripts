@@ -18,32 +18,37 @@ class DnsResolve(Script):
             raise AbortScript(e)
 
     def run(self, data, commit):
+        self.log_debug(f"Starting DNS resolution for {data['fqdn']}")
 
         fqdn = data['fqdn'][:-1]
         resolved_ips = self.resolve_dns_record(fqdn)
 
-        # For each resolved IP, chek is it in the database
+        self.log_debug(f"Resolved IPs: {resolved_ips}")
 
         ip_address_ids = []
 
-
         for ip_to_check in resolved_ips:
-            if IPAddress.objects.filter(ip_to_check).exists():  
-                self.log_success(f"IP {ip_to_check} already exists in database")  
+            self.log_debug(f"Processing IP: {ip_to_check}")
+
+            if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
+                self.log_info(f"IP {ip_to_check} already exists in database")  
                 existing_ip = IPAddress.objects.get(address=str(ip_to_check))
                 ip_address_ids.append(existing_ip.id)
+                self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
 
-            else:  
+            else:
                 self.log_info(f"Creating IP {ip_to_check}")
 
                 ip = IPAddress( address=ip_to_check,  
                                 status=IPAddressStatusChoices.STATUS_ACTIVE)
+                self.log_debug(f"IP object created for {ip}, validating and saving.")
                 ip.full_clean()
                 ip.save()
+
                 ip_address_ids.append(ip.id)
-                self.log_success(f"Created IP {ip_to_check} with ID {ip.id}")
+                self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
 
-
+        self.log_info(f"Final list of IP address IDs to associate: {ip_address_ids}")
         # Get the DNS record  
         dns_record = Record.objects.get(pk=data['id'])  
 
