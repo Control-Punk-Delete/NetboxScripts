@@ -32,28 +32,28 @@ class CDNFinder(Script):
 
         # Private IP address detection
         if ip_address.is_private:
-            print(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
+            self.log_info(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
             exit()
 
-        print(f"IP Address {str(ip_address)} is global.")
+        self.log_info(f"IP Address {str(ip_address)} is global.")
 
         # Reserved IP Address detection
         if ip_address.is_reserved:
-            print(f"Global IP Address {str(ip_address)} is reserved.")
-            print("Add tag - 'reserved'")
+            self.log_info(f"Global IP Address {str(ip_address)} is reserved.")
+            self.log_debug("Add tag - 'reserved'")
 
         # Multicast IP Address detection
         if ip_address.is_multicast:
-            print(f"Global IP Address {str(ip_address)} is multicast.")
-            print("Add tag - 'multicast'")
+            self.log_info(f"Global IP Address {str(ip_address)} is multicast.")
+            self.log_debug("Add tag - 'multicast'")
 
         if self.is_cdn(ip_address) and ip_type == 4:
-            print(f"Global IP Address {str(ip_address)} is CDN.")
-            print("Add tag - 'cdn'")
+            self.log_info(f"Global IP Address {str(ip_address)} is CDN.")
+            self.log_debug("Add tag - 'cdn'")
             exit()
 
-        print(f"Global IP Address is verificated!")
-        print("Add tag - 'verificated'")
+        self.log_info(f"Global IP Address is verificated!")
+        self.log_debug("Add tag - 'verificated'")
 
     
     

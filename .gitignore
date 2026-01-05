@@ -2,4 +2,3 @@ venv
 .DS_Store
 __pycache__/
 test.py
-filter_cdn.py
