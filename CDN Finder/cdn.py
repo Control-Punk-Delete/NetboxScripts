@@ -10,13 +10,16 @@ class CDNCreation(Script):
 
 
     def cdn_list_creator(self):
+        self.log_debug("Start cdn_list_creator function")
         for line in (
             line.strip()
             for line in chain.from_iterable(open(f) for f in glob("./ipv4networks-*"))
         ):
             if not line or line.startswith("#"):
+                self.log_debug("Not a line")
                 continue
             try:
+                self.log_debug(f"Populare a {line}")
                 net = ipaddress.ip_network(line, strict=False)
                 if isinstance(net, ipaddress.IPv4Network):
                   self.CDN_IPSv4_LIST.append(net)
@@ -35,6 +38,8 @@ class CDNCreation(Script):
                     self.CDN_IPSv6_LIST.append(net)
             except ValueError:
                 pass
+        self.log_debug("END cdn_list_creator function")
+        
 
     def run(self, data, commit):
         
