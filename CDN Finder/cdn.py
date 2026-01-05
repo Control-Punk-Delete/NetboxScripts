@@ -38,8 +38,8 @@ class IPValidator(Script):
 
     def run(self, data, commit):
         
-        self.log_debug(f"Script is starting")
-        self.log_debug(f"Start running cdn list creation")
+        self.log_info(f"Script is starting")
+        self.log_info(f"Start running cdn list creation")
 
         self.cdn_list_vreator(self)
 
