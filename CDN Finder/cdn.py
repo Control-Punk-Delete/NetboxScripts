@@ -32,11 +32,12 @@ class IPValidator(Scripts):
                     self.CDN_IPSv6_LIST.append(net)
             except ValueError:
                 pass
+
     def run(self, data, commit):
         self.log_debug(f"Script is starting")
         self.log_debug(f"Start running cdn list creation")
 
-        self.cdn_list_vreator()
+        self.cdn_list_vreator(self)
 
         self.log_info(f"v4: {self.CDN_IPSv4_LIST}")
         self.log_info(f"v4: {self.CDN_IPSv6_LIST}")
