@@ -1,11 +1,12 @@
 from extras.scripts import *
-
+from glob import glob
+from itertools import chain
 
 class IPValidator(Scripts):
     CDN_IPSv4_LIST = []
     CDN_IPSv6_LIST = []
 
-    def __init__(self):
+    def cdn_list_vreator(self):
         for line in (
             line.strip()
             for line in chain.from_iterable(open(f) for f in glob("cdn-lists/ipv4networks-*"))
@@ -32,5 +33,10 @@ class IPValidator(Scripts):
             except ValueError:
                 pass
     def run(self, data, commit):
+        self.log_debug(f"Script is starting")
+        self.log_debug(f"Start running cdn list creation")
+
+        self.cdn_list_vreator()
+
         self.log_info(f"v4: {self.CDN_IPSv4_LIST}")
         self.log_info(f"v4: {self.CDN_IPSv6_LIST}")
