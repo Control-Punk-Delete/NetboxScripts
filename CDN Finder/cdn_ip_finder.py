@@ -460,6 +460,7 @@ class CDNFinder(Script):
         self.log_debug(f"CDN List creating is finished. {len(self.CDN_IPSv4_LIST)} - subnets present")
 
         self.log_info(f"Data extraction process started")
+        self.log_debug(data)
         if data['url'].startswith('/api/ipam/ip-addresses/'):
             self.log_debug(f"IP address validation started")
 
