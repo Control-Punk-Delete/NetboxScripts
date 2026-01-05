@@ -9,7 +9,7 @@ class CDNCreation(Script):
     CDN_IPSv6_LIST = []
 
 
-    def cdn_list_creator():
+    def cdn_list_creator(self):
         for line in (
             line.strip()
             for line in chain.from_iterable(open(f) for f in glob("cdn-lists/ipv4networks-*"))
