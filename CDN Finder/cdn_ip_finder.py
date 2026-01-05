@@ -500,7 +500,8 @@ class CDNFinder(Script):
             self.log_debug("Get IP Address object")
             ip_object = IPAddress.objects.get(pk=data['id'])
             self.log_debug("Get IP Address object tags")
-            existing_tags = set(ip_object.tags.all())
+            existing_tags = ip_object.tags.all()
+
             self.log_debug(existing_tags)
             self.log_debug("Update IP Address object")
 
@@ -508,7 +509,8 @@ class CDNFinder(Script):
             self.log_debug("Get IP Range object")
             ip_range_object = IPRange.objects.get(pk=data['id'])
             self.log_debug("Get IP Range object tags.")
-            existing_tags = set(ip_range_object.tags.all())
+            existing_tags = ip_range_object.tags.all()
+
             self.log_debug(existing_tags)
             self.log_debug("Update IP Range object")
 
@@ -516,7 +518,8 @@ class CDNFinder(Script):
             self.log_debug("Get Prefix object")
             prefix_object = Prefix.objects.get(pk=data['id'])
             self.log_debug("Get Prefix object")
-            existing_tags = set(prefix_object.tags.all())
+            existing_tags = prefix_object.tags.all()
+
             self.log_debug(existing_tags)
             self.log_debug("Update Prefix object")
 
