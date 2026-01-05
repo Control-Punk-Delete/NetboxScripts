@@ -502,8 +502,18 @@ class CDNFinder(Script):
             self.log_debug("Get IP Address object tags")
             self.log_debug(ip_object)
 
-            existing_tags = ip_object.tags.all()
-            self.log_debug(existing_tags)
+            #existing_tags = ip_object.tags.all()
+            #self.log_debug(existing_tags)
+
+            tag_name = "test"
+
+            tag, created = Tag.objects.get_or_create(  
+                name=tag_name,  
+                defaults={'slug': tag_name.lower().replace(' ', '-')}  
+            )
+
+            ip_object.tags.add(tag)
+            ip.save()
             self.log_debug("Update IP Address object")
 
         elif data_type == "ip-range":
