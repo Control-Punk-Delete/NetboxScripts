@@ -13,7 +13,7 @@ class CDNCreation(Script):
         self.log_debug("Start cdn_list_creator function")
         for line in (
             line.strip()
-            for line in chain.from_iterable(open(f) for f in glob("./ipv4networks-*"))
+            for line in chain.from_iterable(open(f) for f in glob("cdn-lists/ipv4networks-*"))
         ):
             if not line or line.startswith("#"):
                 self.log_debug("Not a line")
