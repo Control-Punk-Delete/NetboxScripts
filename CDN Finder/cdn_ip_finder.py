@@ -1,7 +1,7 @@
 import ipaddress
 
 from extras.scripts import *
-
+from utilities.exceptions import AbortScript
 
 
 class CDNFinder(Script):
@@ -458,25 +458,39 @@ class CDNFinder(Script):
                 pass
 
         self.log_debug(f"CDN List creating is finished. {len(self.CDN_IPSv4_LIST)} - subnets present")
-
         self.log_info(f"Data extraction process started")
         self.log_debug(data)
+
         if data['url'].startswith('/api/ipam/ip-addresses/'):
             self.log_debug(f"IP address validation started")
+            ip_address = ipaddress.IPv4Address(data['address'].split("/")[0])
+        
+        elif data['url'].startswith('/api/ipam/prefixes/'):
+            self.log_debug(f"Prefix validation started")
+            ip_address = ipaddress.IPv4Address(data['prefix'].split("/")[0])
 
-            if data['family']['value'] == 4:
-                self.log_debug(f"IP v4 address validation started")
-                ip_address = ipaddress.IPv4Address(data['address'].split("/")[0])
-                self.log_debug(f"Validation function runned for {str(ip_address)}")
-                self.vlaidation(ip_address)
 
-            elif data['family']['value'] == 6:
-                self.log_debug(f"IP v6 address validation started")
-                ip_address = ipaddress.IPv6Address(data['address'].split("/")[0])
-                self.log_debug(f"Validation function runned for {str(ip_address)}")
-                self.vlaidation(ip_address, 6)
-            else:
-                self.log_error(f"Unknown IP address type")
+        elif data['url'].startswith('api/ipam/ip-ranges/'):
+            self.log_debug(f"IP Range validation started")
+            ip_address = ipaddress.IPv4Address(data['start_address'].split("/")[0])
+            
+        else:
+            raise AbortScript("Wrong data type was provided. (Prefix, IP Range and IP Address is suported)")
+
+
+        if data['family']['value'] == 4:
+            self.log_debug(f"Validation function runned for {str(ip_address)}")
+            self.vlaidation(ip_address)
+
+        elif data['family']['value'] == 6:
+            self.log_debug(f"IP v6 address validation started")
+            ip_address = ipaddress.IPv6Address(data['address'].split("/")[0])
+            self.log_debug(f"Validation function runned for {str(ip_address)}")
+            self.vlaidation(ip_address, 6)
+        else:
+            raise AbortScript(f"Unknown IP address type. (Suported 4 and 6)")
+
+        
 
         self.log_info(f"Data extraction process finished")
 
