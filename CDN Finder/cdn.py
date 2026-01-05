@@ -41,7 +41,7 @@ class CDNCreation(Script):
         self.log_info(f"Script is starting")
         self.log_info(f"Start running cdn list creation")
 
-        self.cdn_list_creator()
+        self.cdn_list_creator(self)
 
         self.log_info(f"CDN List v4: {self.CDN_IPSv4_LIST}")
         self.log_info(f"CDN List v6: {self.CDN_IPSv6_LIST}")
