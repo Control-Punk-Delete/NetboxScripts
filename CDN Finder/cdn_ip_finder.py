@@ -20,7 +20,6 @@ class CDNFinder(Script):
                     return True
         else:
             print("ERROR: Function is_cdn get wrong ip_type parameter.")
-            exit()
         return False
     
 
@@ -28,39 +27,39 @@ class CDNFinder(Script):
 
         if not ip_type  in [4, 6]:
             self.log_error("ERROR: Function validation get wrong ip_type parameter.")
-            exit()
+
 
         # Private IP address detection
         if ip_address.is_private:
             self.log_info(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
-            exit()
+        
+        else:
+            self.log_info(f"IP Address {str(ip_address)} is global.")
 
-        self.log_info(f"IP Address {str(ip_address)} is global.")
+            # Reserved IP Address detection
+            if ip_address.is_reserved:
+                self.log_info(f"Global IP Address {str(ip_address)} is reserved.")
+                self.log_debug("Add tag - 'reserved'")
 
-        # Reserved IP Address detection
-        if ip_address.is_reserved:
-            self.log_info(f"Global IP Address {str(ip_address)} is reserved.")
-            self.log_debug("Add tag - 'reserved'")
+            # Multicast IP Address detection
+            if ip_address.is_multicast:
+                self.log_info(f"Global IP Address {str(ip_address)} is multicast.")
+                self.log_debug("Add tag - 'multicast'")
 
-        # Multicast IP Address detection
-        if ip_address.is_multicast:
-            self.log_info(f"Global IP Address {str(ip_address)} is multicast.")
-            self.log_debug("Add tag - 'multicast'")
+            if self.is_cdn(ip_address) and ip_type == 4:
+                self.log_info(f"Global IP Address {str(ip_address)} is CDN.")
+                self.log_debug("Add tag - 'cdn'")
+                exit()
 
-        if self.is_cdn(ip_address) and ip_type == 4:
-            self.log_info(f"Global IP Address {str(ip_address)} is CDN.")
-            self.log_debug("Add tag - 'cdn'")
-            exit()
-
-        self.log_info(f"Global IP Address is verificated!")
-        self.log_debug("Add tag - 'verificated'")
+            self.log_info(f"Global IP Address is verificated!")
+            self.log_debug("Add tag - 'verificated'")
 
     
     
     def run(self, data, commit):
         self.log_debug("Start script")
 
-        CDN_v4_LIST = ["8.8.8.8", "2.16.0.0/13",
+        CDN_v4_LIST = ["2.16.0.0/13",
 "4.77.205.0/24",
 "8.28.5.0/24",
 "8.31.234.0/24",
