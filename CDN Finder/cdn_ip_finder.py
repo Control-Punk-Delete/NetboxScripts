@@ -500,14 +500,16 @@ class CDNFinder(Script):
             self.log_debug("Get IP Address object")
             ip_object = IPAddress.objects.get(pk=data['id'])
             self.log_debug("Get IP Address object tags")
-            existing_tags = ip_object.tags.all()
+            self.log_debug(ip_object)
 
+            existing_tags = ip_object.tags.all()
             self.log_debug(existing_tags)
             self.log_debug("Update IP Address object")
 
         elif data_type == "ip-range":
             self.log_debug("Get IP Range object")
             ip_range_object = IPRange.objects.get(pk=data['id'])
+
             self.log_debug("Get IP Range object tags.")
             existing_tags = ip_range_object.tags.all()
 
