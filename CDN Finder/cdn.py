@@ -9,7 +9,7 @@ class IPValidator(Script):
     CDN_IPSv6_LIST = []
 
 
-    def cdn_list_vreator(self):
+    def cdn_list_creator():
         for line in (
             line.strip()
             for line in chain.from_iterable(open(f) for f in glob("cdn-lists/ipv4networks-*"))
@@ -41,7 +41,7 @@ class IPValidator(Script):
         self.log_info(f"Script is starting")
         self.log_info(f"Start running cdn list creation")
 
-        self.cdn_list_vreator(self)
+        self.cdn_list_creator()
 
         self.log_info(f"CDN List v4: {self.CDN_IPSv4_LIST}")
         self.log_info(f"CDN List v6: {self.CDN_IPSv6_LIST}")
