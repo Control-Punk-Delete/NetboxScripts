@@ -513,7 +513,7 @@ class CDNFinder(Script):
             )
 
             ip_object.tags.add(tag)
-            ip.save()
+            ip_object.save()
             self.log_debug("Update IP Address object")
 
         elif data_type == "ip-range":
