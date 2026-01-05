@@ -4,7 +4,7 @@ from glob import glob
 from itertools import chain
 
 
-class IPValidator(Script):
+class CDNCreation(Script):
     CDN_IPSv4_LIST = []
     CDN_IPSv6_LIST = []
 
