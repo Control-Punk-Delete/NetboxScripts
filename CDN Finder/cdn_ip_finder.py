@@ -2,7 +2,8 @@ import ipaddress
 
 from extras.scripts import *
 from utilities.exceptions import AbortScript
-
+from ipam.models import IPAddress, IPRange, Prefix  
+from extras.models import Tag
 
 class CDNFinder(Script):
 
@@ -463,18 +464,23 @@ class CDNFinder(Script):
         if data['url'].startswith('/api/ipam/ip-addresses/'):
             self.log_debug(f"IP address validation started")
             ip_address = ipaddress.IPv4Address(data['address'].split("/")[0])
+            data_type = "ip-address"
         
         elif data['url'].startswith('/api/ipam/prefixes/'):
             self.log_debug(f"Prefix validation started")
             ip_address = ipaddress.IPv4Address(data['prefix'].split("/")[0])
+            data_type = "prefix"
 
 
         elif data['url'].startswith('/api/ipam/ip-ranges/'):
             self.log_debug(f"IP Range validation started")
             ip_address = ipaddress.IPv4Address(data['start_address'].split("/")[0])
+            data_type = "ip-range"
             
         else:
             raise AbortScript("Wrong data type was provided. (Prefix, IP Range and IP Address is suported)")
+
+
 
 
         if data['family']['value'] == 4:
@@ -488,6 +494,35 @@ class CDNFinder(Script):
             self.vlaidation(ip_address, 6)
         else:
             raise AbortScript(f"Unknown IP address type. (Suported 4 and 6)")
+        
+
+        if data_type == "ip-address":
+            self.log_debug("Get IP Address object")
+            ip_object = IPAddress.objects.get(pk=data['id'])
+            self.log_debug("Get IP Address object tags")
+            existing_tags = set(ip_object.tags.all())
+            self.log_debug(existing_tags)
+            self.log_debug("Update IP Address object")
+
+        elif data_type == "ip-range":
+            self.log_debug("Get IP Range object")
+            ip_range_object = IPRange.objects.get(pk=data['id'])
+            self.log_debug("Get IP Range object tags.")
+            existing_tags = set(ip_range_object.tags.all())
+            self.log_debug(existing_tags)
+            self.log_debug("Update IP Range object")
+
+        else:
+            self.log_debug("Get Prefix object")
+            prefix_object = Prefix.objects.get(pk=data['id'])
+            self.log_debug("Get Prefix object")
+            existing_tags = set(prefix_object.tags.all())
+            self.log_debug(existing_tags)
+            self.log_debug("Update Prefix object")
+
+
+        
+
 
         
 
