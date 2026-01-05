@@ -470,7 +470,7 @@ class CDNFinder(Script):
             ip_address = ipaddress.IPv4Address(data['prefix'].split("/")[0])
 
 
-        elif data['url'].startswith('api/ipam/ip-ranges/'):
+        elif data['url'].startswith('/api/ipam/ip-ranges/'):
             self.log_debug(f"IP Range validation started")
             ip_address = ipaddress.IPv4Address(data['start_address'].split("/")[0])
             
