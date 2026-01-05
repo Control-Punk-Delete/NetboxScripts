@@ -12,7 +12,7 @@ class CDNCreation(Script):
     def cdn_list_creator(self):
         for line in (
             line.strip()
-            for line in chain.from_iterable(open(f) for f in glob(".ipv4networks-*"))
+            for line in chain.from_iterable(open(f) for f in glob("./ipv4networks-*"))
         ):
             if not line or line.startswith("#"):
                 continue
@@ -41,7 +41,7 @@ class CDNCreation(Script):
         self.log_info(f"Script is starting")
         self.log_info(f"Start running cdn list creation")
 
-        self.cdn_list_creator(self)
+        self.cdn_list_creator()
 
         self.log_info(f"CDN List v4: {self.CDN_IPSv4_LIST}")
         self.log_info(f"CDN List v6: {self.CDN_IPSv6_LIST}")
