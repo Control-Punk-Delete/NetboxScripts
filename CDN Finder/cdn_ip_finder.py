@@ -1,4 +1,35 @@
-"2.16.0.0/13",
+import ipaddress
+
+
+from extras.scripts import *
+
+
+
+class CDNFinder(Script):
+
+    CDN_IPSv4_LIST = []
+
+    def is_cdn(self, ip_address, ip_type: int = 4):
+        if ip_type == 4:
+            for cdn_network in self.CDN_IPSv4_LIST:
+                if ip_address in cdn_network:
+                    return True
+                
+        elif ip_type == 6:
+            for cdn_network in self.CDN_IPSv6_LIST:
+                if ip_address in cdn_network:
+                    return True
+        else:
+            print("ERROR: Function is_cdn get wrong ip_type parameter.")
+            exit()
+        return False
+
+    
+    
+    def run(self, data, commit):
+        self.log_debug("Start script")
+
+        CDN_v4_LIST = ["2.16.0.0/13",
 "4.77.205.0/24",
 "8.28.5.0/24",
 "8.31.234.0/24",
@@ -366,3 +397,39 @@
 "221.110.252.0/24",
 "221.111.192.0/25",
 "221.111.224.0/26",
+"173.245.48.0/20",
+"103.21.244.0/22",
+"103.22.200.0/22",
+"103.31.4.0/22",
+"141.101.64.0/18",
+"108.162.192.0/18",
+"190.93.240.0/20",
+"188.114.96.0/20",
+"197.234.240.0/22",
+"198.41.128.0/17",
+"162.158.0.0/15",
+"104.16.0.0/13",
+"104.24.0.0/14",
+"172.64.0.0/13",
+"131.0.72.0/22"]
+        
+        
+
+        self.log_debug("CDN List creating is started")
+
+        for ip in CDN_v4_LIST:
+
+            try:
+                net = ipaddress.ip_network(ip, strict=False)
+                if isinstance(net, ipaddress.IPv4Network):
+                    self.CDN_IPSv4_LIST.append(net)
+
+            except ValueError as e:
+                self.log_warning(f"During cdn list creation rise {e}")
+                pass
+            
+        self.log_debug(f"CDN List creating is finished. {len(self.CDN_IPSv4_LIST)} - subnets present")
+
+
+
+
