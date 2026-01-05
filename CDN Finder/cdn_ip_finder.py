@@ -1,6 +1,5 @@
 import ipaddress
 
-
 from extras.scripts import *
 
 
@@ -23,6 +22,38 @@ class CDNFinder(Script):
             print("ERROR: Function is_cdn get wrong ip_type parameter.")
             exit()
         return False
+    
+
+    def vlaidation(self, ip_address, ip_type: int = 4):
+
+        if not ip_type  in [4, 6]:
+            self.log_error("ERROR: Function validation get wrong ip_type parameter.")
+            exit()
+
+        # Private IP address detection
+        if ip_address.is_private:
+            print(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
+            exit()
+
+        print(f"IP Address {str(ip_address)} is global.")
+
+        # Reserved IP Address detection
+        if ip_address.is_reserved:
+            print(f"Global IP Address {str(ip_address)} is reserved.")
+            print("Add tag - 'reserved'")
+
+        # Multicast IP Address detection
+        if ip_address.is_multicast:
+            print(f"Global IP Address {str(ip_address)} is multicast.")
+            print("Add tag - 'multicast'")
+
+        if self.is_cdn(ip_address) and ip_type == 4:
+            print(f"Global IP Address {str(ip_address)} is CDN.")
+            print("Add tag - 'cdn'")
+            exit()
+
+        print(f"Global IP Address is verificated!")
+        print("Add tag - 'verificated'")
 
     
     
@@ -412,9 +443,7 @@ class CDNFinder(Script):
 "104.24.0.0/14",
 "172.64.0.0/13",
 "131.0.72.0/22"]
-        
-        
-
+    
         self.log_debug("CDN List creating is started")
 
         for ip in CDN_v4_LIST:
@@ -429,6 +458,28 @@ class CDNFinder(Script):
                 pass
 
         self.log_debug(f"CDN List creating is finished. {len(self.CDN_IPSv4_LIST)} - subnets present")
+
+        self.log_info(f"Data extraction process started")
+        if data['url'].startswith('/api/ipam/ip-addresses/'):
+            self.log_debug(f"IP address validation started")
+
+            if data['family']['value'] == 4:
+                self.log_debug(f"IP v4 address validation started")
+                ip_address = ipaddress.IPv4Address(data['address'].split("/")[0])
+                self.log_debug(f"Validation function runned for {str(ip_address)}")
+                self.vlaidation(ip_address)
+
+            elif data['family']['value'] == 6:
+                self.log_debug(f"IP v6 address validation started")
+                ip_address = ipaddress.IPv6Address(data['address'].split("/")[0])
+                self.log_debug(f"Validation function runned for {str(ip_address)}")
+                self.vlaidation(ip_address, 6)
+            else:
+                self.log_error(f"Unknown IP address type")
+
+        self.log_info(f"Data extraction process finished")
+
+
 
 
 
