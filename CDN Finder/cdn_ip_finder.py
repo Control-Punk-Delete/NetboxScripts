@@ -29,7 +29,7 @@ class CDNFinder(Script):
     def run(self, data, commit):
         self.log_debug("Start script")
 
-        CDN_v4_LIST = ["2.16.0.0/13",
+        CDN_v4_LIST = ["8.8.8.8", "2.16.0.0/13",
 "4.77.205.0/24",
 "8.28.5.0/24",
 "8.31.234.0/24",
@@ -427,7 +427,7 @@ class CDNFinder(Script):
             except ValueError as e:
                 self.log_warning(f"During cdn list creation rise {e}")
                 pass
-            
+
         self.log_debug(f"CDN List creating is finished. {len(self.CDN_IPSv4_LIST)} - subnets present")
 
 
