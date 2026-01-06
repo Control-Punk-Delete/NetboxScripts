@@ -39,19 +39,21 @@ class DnsResolve(Script):
                 self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
 
             else:
-                self.log_info(f"Creating IP {ip_to_check}")
+                self.log_info(f"IP Address creating {ip_to_check} - started")
 
                 if data['tenant']:
                     self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
-                    tenant = Tenant.objects.get(pk=data['tenant']['id']),
-                    self.log_debug(f"Find tenant - {tenant}")
+                    tenant = Tenant.objects.get(pk = data['tenant']['id']),
+
+                    self.log_debug(f"Find tenant - {tenant}: {type(tenant)}")
                 else:
                     self.log_debug("Record not asign to any tenant")
                     tenant = None
 
                 ip = IPAddress( address = ip_to_check,
                                 tenant = tenant,
-                                status = IPAddressStatusChoices.STATUS_ACTIVE)
+                                status = IPAddressStatusChoices.STATUS_ACTIVE )
+                
                 self.log_debug(f"IP object created for {ip}, validating and saving.")
                 ip.full_clean()
                 ip.save()
