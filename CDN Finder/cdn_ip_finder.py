@@ -484,7 +484,7 @@ class CDNFinder(Script):
             ip_object = IPAddress.objects.get(pk=data['id'])
 
             self.log_info(f"Updating IP Address object tags")
-            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.tags.set(self.NEW_TAGS)
             ip_object.save()
 
             self.log_info("Validation finished")
@@ -504,7 +504,7 @@ class CDNFinder(Script):
             ip_object = Prefix.objects.get(pk=data['id'])
 
             self.log_info(f"Updating Prefix object tags")
-            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.tags.set(self.NEW_TAGS)
             ip_object.save()
 
             self.log_info("Validation finished")
@@ -525,7 +525,7 @@ class CDNFinder(Script):
             self.log_info(f"Updating IP Range object tags")
 
 
-            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.tags.set(self.NEW_TAGS)
             ip_object.save()
 
             self.log_info("Validation finished")
