@@ -8,6 +8,7 @@ from extras.models import Tag
 class CDNFinder(Script):
 
     CDN_IPSv4_LIST = []
+    NEW_TAGS = []
 
     def is_cdn(self, ip_address, ip_type: int = 4):
         if ip_type == 4:
@@ -33,28 +34,33 @@ class CDNFinder(Script):
         # Private IP address detection
         if ip_address.is_private:
             self.log_info(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
+            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="private"))
         
         else:
             self.log_info(f"IP Address {str(ip_address)} is global.")
+            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="public"))
 
             # Reserved IP Address detection
             if ip_address.is_reserved:
                 self.log_info(f"Global IP Address {str(ip_address)} is reserved.")
                 self.log_debug("Add tag - 'reserved'")
+                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="reserved"))
 
             # Multicast IP Address detection
             if ip_address.is_multicast:
                 self.log_info(f"Global IP Address {str(ip_address)} is multicast.")
                 self.log_debug("Add tag - 'multicast'")
+                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="multicast"))
 
             if self.is_cdn(ip_address) and ip_type == 4:
                 self.log_info(f"Global IP Address {str(ip_address)} is CDN.")
                 self.log_debug("Add tag - 'cdn'")
-                exit()
+                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="cdn"))
+                
 
             self.log_info(f"Global IP Address is verificated!")
             self.log_debug("Add tag - 'verificated'")
-
+            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="verificated"))
     
     
     def run(self, data, commit):
@@ -461,87 +467,66 @@ class CDNFinder(Script):
         self.log_info(f"Data extraction process started")
         self.log_debug(data)
 
+
         if data['url'].startswith('/api/ipam/ip-addresses/'):
-            self.log_debug(f"IP address validation started")
+            self.log_debug(f"Find IP Address string")
             ip_address = ipaddress.IPv4Address(data['address'].split("/")[0])
-            data_type = "ip-address"
-        
+            self.log_debug(f"Start ")
+            self.vlaidation(ip_address, data['family']['value'])
+
+            self.log_debug(f"Extracting Netbox IP Address object")
+            ip_object = IPAddress.objects.get(pk=data['id'])
+
+            self.log_info(f"Updating IP Address object tags")
+            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.save()
+
+            self.log_info("Validation finished")
+
+
         elif data['url'].startswith('/api/ipam/prefixes/'):
-            self.log_debug(f"Prefix validation started")
+            self.log_debug(f"Find validation string")
             ip_address = ipaddress.IPv4Address(data['prefix'].split("/")[0])
-            data_type = "prefix"
+
+            self.log_debug(f"Start validation process for Subnet IP Address {ip_address}")
+
+            self.vlaidation(ip_address, data['family']['value'])
+
+
+            self.log_debug(f"Extracting Netbox Prefix object")
+
+            ip_object = Prefix.objects.get(pk=data['id'])
+
+            self.log_info(f"Updating Prefix object tags")
+            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.save()
+
+            self.log_info("Validation finished")
+
 
 
         elif data['url'].startswith('/api/ipam/ip-ranges/'):
-            self.log_debug(f"IP Range validation started")
+            self.log_debug(f"Find IP Range string")
             ip_address = ipaddress.IPv4Address(data['start_address'].split("/")[0])
-            data_type = "ip-range"
+
+            self.log_debug(f"Start validation process for first IP Address of IP Range {ip_address}")
+
+            self.vlaidation(ip_address, data['family']['value'])
+
+            self.log_debug(f"Extracting Netbox IP Range object")
+            ip_object = IPRange.objects.get(pk=data['id'])
+
+            self.log_info(f"Updating IP Range object tags")
+
+
+            ip_object.tags.add(self.NEW_TAGS)
+            ip_object.save()
+
+            self.log_info("Validation finished")
             
         else:
             raise AbortScript("Wrong data type was provided. (Prefix, IP Range and IP Address is suported)")
 
-
-
-
-        if data['family']['value'] == 4:
-            self.log_debug(f"Validation function runned for {str(ip_address)}")
-            self.vlaidation(ip_address)
-
-        elif data['family']['value'] == 6:
-            self.log_debug(f"IP v6 address validation started")
-            ip_address = ipaddress.IPv6Address(data['address'].split("/")[0])
-            self.log_debug(f"Validation function runned for {str(ip_address)}")
-            self.vlaidation(ip_address, 6)
-        else:
-            raise AbortScript(f"Unknown IP address type. (Suported 4 and 6)")
-        
-
-        if data_type == "ip-address":
-            self.log_debug("Get IP Address object")
-            ip_object = IPAddress.objects.get(pk=data['id'])
-            self.log_debug("Get IP Address object tags")
-            self.log_debug(ip_object)
-
-            #existing_tags = ip_object.tags.all()
-            #self.log_debug(existing_tags)
-
-            tag_name = "test"
-
-            tag, created = Tag.objects.get_or_create(  
-                name=tag_name,  
-                defaults={'slug': tag_name.lower().replace(' ', '-')}  
-            )
-
-            ip_object.tags.add(tag)
-            ip_object.save()
-            self.log_debug("Update IP Address object")
-
-        elif data_type == "ip-range":
-            self.log_debug("Get IP Range object")
-            ip_range_object = IPRange.objects.get(pk=data['id'])
-
-            self.log_debug("Get IP Range object tags.")
-            existing_tags = ip_range_object.tags.all()
-
-            self.log_debug(existing_tags)
-            self.log_debug("Update IP Range object")
-
-        else:
-            self.log_debug("Get Prefix object")
-            prefix_object = Prefix.objects.get(pk=data['id'])
-            self.log_debug("Get Prefix object")
-            existing_tags = prefix_object.tags.all()
-
-            self.log_debug(existing_tags)
-            self.log_debug("Update Prefix object")
-
-
-        
-
-
-        
-
-        self.log_info(f"Data extraction process finished")
 
 
 
