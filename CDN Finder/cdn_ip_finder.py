@@ -34,33 +34,33 @@ class CDNFinder(Script):
         # Private IP address detection
         if ip_address.is_private:
             self.log_info(f"IP Address {str(ip_address)} is private. Skip cansel validation process.")
-            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="private"))
+            self.NEW_TAGS.append(Tag.objects.get_or_create(name="private"))
         
         else:
             self.log_info(f"IP Address {str(ip_address)} is global.")
-            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="public"))
+            self.NEW_TAGS.append(Tag.objects.get_or_create(name="public"))
 
             # Reserved IP Address detection
             if ip_address.is_reserved:
                 self.log_info(f"Global IP Address {str(ip_address)} is reserved.")
                 self.log_debug("Add tag - 'reserved'")
-                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="reserved"))
+                self.NEW_TAGS.append(Tag.objects.get_or_create(name="reserved"))
 
             # Multicast IP Address detection
             if ip_address.is_multicast:
                 self.log_info(f"Global IP Address {str(ip_address)} is multicast.")
                 self.log_debug("Add tag - 'multicast'")
-                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="multicast"))
+                self.NEW_TAGS.append(Tag.objects.get_or_create(name="multicast"))
 
             if self.is_cdn(ip_address) and ip_type == 4:
                 self.log_info(f"Global IP Address {str(ip_address)} is CDN.")
                 self.log_debug("Add tag - 'cdn'")
-                self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="cdn"))
+                self.NEW_TAGS.append(Tag.objects.get_or_create(name="cdn"))
                 
 
             self.log_info(f"Global IP Address is verificated!")
             self.log_debug("Add tag - 'verificated'")
-            self.NEW_TAGS.append(tag, created = Tag.objects.get_or_create(name="verificated"))
+            self.NEW_TAGS.append(Tag.objects.get_or_create(name="verificated"))
     
     
     def run(self, data, commit):
