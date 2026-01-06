@@ -44,6 +44,7 @@ class DnsResolve(Script):
                 if data['tenant']:
                     self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
                     tenant = Tenant.objects.get(pk=data['tenant']['id']),
+                    self.log_debug(f"Find tenant - {tenant}")
                 else:
                     self.log_debug("Record not asign to any tenant")
                     tenant = None
