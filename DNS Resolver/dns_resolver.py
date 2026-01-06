@@ -4,7 +4,8 @@ from extras.scripts import *
 from ipam.models import IPAddress
 from netbox_dns.models import (Record)
 from utilities.exceptions import AbortScript
-from ipam.choices import IPAddressStatusChoices  
+from ipam.choices import IPAddressStatusChoices
+from tenancy.models import Tenant  
 
  
 class DnsResolve(Script):
@@ -40,8 +41,16 @@ class DnsResolve(Script):
             else:
                 self.log_info(f"Creating IP {ip_to_check}")
 
-                ip = IPAddress( address=ip_to_check,  
-                                status=IPAddressStatusChoices.STATUS_ACTIVE)
+                if data['tenant']:
+                    self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
+                    tenant = Tenant.objects.get(pk=data['tenant']['id']),
+                else:
+                    self.log_debug("Record not asign to any tenant")
+                    tenant = None
+
+                ip = IPAddress( address = ip_to_check,
+                                tenant = tenant,
+                                status = IPAddressStatusChoices.STATUS_ACTIVE)
                 self.log_debug(f"IP object created for {ip}, validating and saving.")
                 ip.full_clean()
                 ip.save()
