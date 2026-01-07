@@ -56,8 +56,8 @@ class OrganizationOnboarding(Script):
         full_name = data['full_name']  
         root_domain = data['root_domain']  
         contact_name = data['contact_name']  
-        email = data.get('email', '')  
-        phone = data.get('phone', '')
+        #email = data.get('email', '')  
+        #phone = data.get('phone', '')
 
         
         if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
