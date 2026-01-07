@@ -1,4 +1,4 @@
-from extras.scripts import Script, StringVar  
+from extras.scripts import *
 from tenancy.models import Tenant  
 from django.utils.text import slugify  
 from utilities.exceptions import AbortScript  
@@ -9,21 +9,23 @@ class OrganizationOnboarding(Script):
     #     description = "Collect organization general information and contact details"
     #     fieldsets = (    
     #         ('General Information', ('edrpou', 'short_name', 'full_name', 'root_domain')),        
-    #     )  
+    #     )
+    class Meta(Script.Meta):
+        name = "Organization Information"
+        description = "Collect organization general information and contact details"
 
     # General Information  
-    edrpou = StringVar(  
-        description="EDRPOU",  
-        required=True
-    )  
-    short_name = StringVar(  
-        description="Short name",  
-        required=True  
-    )  
-    full_name = StringVar(  
-        description="Full name",  
-        required=True  
-    )
+    edrpou = StringVar(
+        description="Name of the new site"
+    ) 
+    # short_name = StringVar(  
+    #     description="Short name",  
+    #     required=True  
+    # )  
+    # full_name = StringVar(  
+    #     description="Full name",  
+    #     required=True  
+    # )
     
     # root_domain = StringVar(  
     #     description="Root domain",  
