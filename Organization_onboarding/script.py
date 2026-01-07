@@ -48,10 +48,10 @@ class OrganizationOnboarding(Script):
   
     def run(self, data, commit):  
         edrpou = data['edrpou']  
-        short_name = data['short_name']  
-        full_name = data['full_name']
+        #short_name = data['short_name']  
+        #full_name = data['full_name']
 
-        self.log_debug(f"Edrpou {edrpou}, Short name: {short_name}, Full Name: {full_name}")
+        self.log_debug(f"Edrpou {edrpou}")
           
         # if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():  
         #     raise AbortScript(f"Tenant with edrpou {edrpou} already exist.")  
