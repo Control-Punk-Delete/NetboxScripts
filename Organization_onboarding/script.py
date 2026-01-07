@@ -1,6 +1,5 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
-from django.core.exceptions import MultipleObjectsReturned 
 from django.utils.text import slugify  
 
 from utilities.exceptions import AbortScript
@@ -24,24 +23,6 @@ class OrganizationOnboarding(Script):
         description="Full name",  
         required=True  
     )  
-    root_domain = StringVar(  
-        description="Root domain",  
-        required=True  
-    )  
-      
-    # Contact Information  
-    contact_name = StringVar(  
-        description="Contact name",  
-        required=True  
-    )  
-    email = StringVar(  
-        description="Email address",  
-        required=False  
-    )  
-    phone = StringVar(  
-        description="Phone number",  
-        required=False  
-    )
   
   
 
@@ -50,25 +31,23 @@ class OrganizationOnboarding(Script):
         edrpou = data['edrpou']  
         short_name = data['short_name']  
         full_name = data['full_name']  
-        root_domain = data['root_domain']  
-        contact_name = data['contact_name']  
-        #email = data.get('email', '')  
-        #phone = data.get('phone', '')
+        self.log_debug(f"{edrpou} - {short_name} - {full_name}")
+
 
         
-        if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
-            raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
+        # if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
+        #     raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
 
             
-        self.log_debug("Create a Tenant object")
+        # self.log_debug("Create a Tenant object")
 
-        # Full tenant creation with all fields  
-        tenant = Tenant.objects.create(  
-        name=short_name,  
-        slug=slugify(short_name),   
-        custom_field_data={  
-                'edrpou': edrpou,  
-                'full_name': full_name  
-                }  
-            )
-        self.log_debug(f"Createed Tenant {tenant}")
+        # # Full tenant creation with all fields  
+        # tenant = Tenant.objects.create(  
+        # name=short_name,  
+        # slug=slugify(short_name),   
+        # custom_field_data={  
+        #         'edrpou': edrpou,  
+        #         'full_name': full_name  
+        #         }  
+        #     )
+        # self.log_debug(f"Createed Tenant {tenant}")
