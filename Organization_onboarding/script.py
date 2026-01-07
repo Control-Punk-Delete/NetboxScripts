@@ -1,7 +1,7 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
 
-#from utilities.exceptions import AbortScript
+from utilities.exceptions import AbortScript
 
     
 class OrganizationOnboarding(Script):  
@@ -33,11 +33,12 @@ class OrganizationOnboarding(Script):
 
 
         
-        # if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
-        #     raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
+        if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
+            raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
+        
 
             
-        # self.log_debug("Create a Tenant object")
+        self.log_debug("Create a Tenant object")
 
         # # Full tenant creation with all fields  
         # tenant = Tenant.objects.create(  
