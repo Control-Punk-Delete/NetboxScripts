@@ -68,7 +68,7 @@ class OrganizationOnboarding(Script):
         # Full tenant creation with all fields  
         tenant = Tenant.objects.create(  
                                         name=short_name,  
-                                        slug=slugify(short_name.replace(" ", "-")),   
+                                        slug=slugify(short_name),   
                                         custom_field_data={  
                                                 'edrpou': edrpou,  
                                                 'full_name': full_name  
