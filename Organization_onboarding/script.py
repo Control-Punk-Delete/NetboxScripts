@@ -16,7 +16,7 @@ class OrganizationOnboarding(Script):
 
     # General Information  
     edrpou = StringVar(
-        description="Name of the new site", required=True, max_len=8, min_len=8
+        description="Name of the new site", required=True
     ) 
     short_name = StringVar( description="Short name", required=True )  
     # full_name = StringVar(  
