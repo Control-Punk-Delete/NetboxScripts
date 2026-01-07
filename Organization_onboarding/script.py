@@ -1,25 +1,22 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
-from django.utils.text import slugify  
 
-from utilities.exceptions import AbortScript
+#from utilities.exceptions import AbortScript
 
     
 class OrganizationOnboarding(Script):  
-    class Meta(Script.Meta):  
-        name = "Organization Information"  
-        description = "Collect organization general information and contact details"  
+
 
     # General Information  
-    edrpou = StringVar(  
+    form_edrpou = StringVar(  
         description="EDRPOU",  
         required=True
     )  
-    short_name = StringVar(  
+    form_short_name = StringVar(  
         description="Short name",  
         required=True  
     )  
-    full_name = StringVar(  
+    form_full_name = StringVar(  
         description="Full name",  
         required=True  
     )  
@@ -28,9 +25,10 @@ class OrganizationOnboarding(Script):
 
     def run(self, data, commit):  
         # Access the form data  
-        edrpou = data['edrpou']  
-        short_name = data['short_name']  
-        full_name = data['full_name']  
+        edrpou = data['form_edrpou']  
+        short_name = data['form_short_name']  
+        full_name = data['form_full_name']
+
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
 
