@@ -32,7 +32,7 @@ class DnsResolve(Script):
             self.log_debug(f"Processing IP: {ip_to_check}")
 
             if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
-                self.log_info(f"IP {ip_to_check} already exists in database")  
+                self.log_info(f"IP {ip_to_check} already exists in database")
                 existing_ip = IPAddress.objects.get(address=str(ip_to_check))
 
                 ip_address_ids.append(existing_ip.id)
