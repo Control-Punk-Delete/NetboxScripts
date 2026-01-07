@@ -4,12 +4,12 @@ from django.utils.text import slugify
 from utilities.exceptions import AbortScript  
   
 class OrganizationOnboarding(Script):  
-    class Meta(Script.Meta):  
-        name = "Organization Information"  
-        description = "Collect organization general information and contact details"
-        fieldsets = (    
-            ('General Information', ('edrpou', 'short_name', 'full_name', 'root_domain')),        
-        )  
+    # class Meta(Script.Meta):  
+    #     name = "Organization Information"  
+    #     description = "Collect organization general information and contact details"
+    #     fieldsets = (    
+    #         ('General Information', ('edrpou', 'short_name', 'full_name', 'root_domain')),        
+    #     )  
 
     # General Information  
     edrpou = StringVar(  
