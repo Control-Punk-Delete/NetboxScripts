@@ -1,7 +1,7 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
 from netbox_dns.models import (NameServer, Zone)
-from netbox_dns.choices import (ZoneStatusChoices, DynamicModelChoiceField)
+from netbox_dns.choices import (ZoneStatusChoices)
 
 from utilities.exceptions import AbortScript
 from django.utils.text import slugify
