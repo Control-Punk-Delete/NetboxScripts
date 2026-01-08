@@ -107,7 +107,7 @@ class OrganizationOnboarding(Script):
                                               email=contact_email
                                             )
             
-            contact.groups.set(contact_group)
+            contact.groups.add(contact_group)
             contact.save()
             self.log_success(f"Created Contact: {contact}")
         
