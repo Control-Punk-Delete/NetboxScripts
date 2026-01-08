@@ -1,7 +1,7 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
 from netbox_dns.models import (NameServer, Zone)
-from netbox_dns.choices import (ZoneStatusChoices)
+from netbox_dns.choices import (ZoneStatusChoices, DynamicModelChoiceField)
 
 from utilities.exceptions import AbortScript
 from django.utils.text import slugify
@@ -98,9 +98,10 @@ class OrganizationOnboarding(Script):
             zone = Zone.objects.create(name=domain_zone,  
                                     status=ZoneStatusChoices.STATUS_ACTIVE,  
                                     tenant=tenant,  
-                                    soa_mname=NameServer.objects.get(pk=1),  
+                                    soa_mname=NameServer.objects.get(name=domain_zone),  
                                     soa_rname=domain_zone  
-                                    )  
+                                    )
+              
             self.log_debug("Zone created successfully")  
             zone.nameservers.set(ns)  
             self.log_debug("Nameservers set successfully")  
