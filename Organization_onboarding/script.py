@@ -20,7 +20,11 @@ class OrganizationOnboarding(Script):
     form_full_name = StringVar(  
         description="Full name",  
         required=True  
-    )  
+    ) 
+    form_zone = StringVar(
+       description="Organization domain zone",
+       required=True
+    )
   
   
 
@@ -29,6 +33,9 @@ class OrganizationOnboarding(Script):
         edrpou = data['form_edrpou']  
         short_name = data['form_short_name']  
         full_name = data['form_full_name']
+
+        zone = data['form_zone']
+        slug = zone.split(".")[0]
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
@@ -40,7 +47,8 @@ class OrganizationOnboarding(Script):
         self.log_debug("Create a Tenant object")
 
         #Creating tenant 
-        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name.replace(" ", "-"), allow_unicode=True),   
+        # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
+        tenant = Tenant.objects.create( name=short_name, slug=slug,   
          custom_field_data={  
                  'edrpou': edrpou,  
                  'full_name': full_name  
