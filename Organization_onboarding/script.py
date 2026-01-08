@@ -106,7 +106,7 @@ class OrganizationOnboarding(Script):
                                     )
               
             self.log_debug("Zone created successfully")  
-            #zone.nameservers.set(ns)  
+            zone.nameservers.set(ns)  
             self.log_debug("Nameservers set successfully")  
             zone.save()  
             self.log_debug("Zone saved successfully")
