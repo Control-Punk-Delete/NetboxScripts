@@ -10,10 +10,10 @@ class OrganizationOnboarding(Script):
     class Meta(Script.Meta):
         name = "Organization onboarding"
         description = "Standartizated customer onboarding"
-        #fieldsets = (  
-        #    ('Organization Details', ('edrpou', 'short_name', 'full_name', 'dns_zone')),  
-        #    ('Contact Information', ('contact_name', 'contact_email', 'contact_phone')),  
-        #) 
+        fieldsets = (  
+            ('Organization Details', ('edrpou', 'short_name', 'full_name', 'dns_zone')),  
+            ('Contact Information', ('contact_name', 'contact_email', 'contact_phone'))  
+        ) 
 
     # General Information  
     edrpou = StringVar(  
@@ -54,9 +54,9 @@ class OrganizationOnboarding(Script):
         # Access the form data  
         edrpou = data['edrpou']  
         short_name = data['short_name']  
-        full_name = data['dns_zone']
+        full_name = data['full_name']
 
-        zone = data['form_zone']
+        zone = data['dns_zone']
         slug = zone.split(".")[0]
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
