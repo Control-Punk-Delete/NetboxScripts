@@ -9,8 +9,9 @@ from utilities.exceptions import AbortScript
 class OrganizationOnboarding(Script):
 
     class Meta(Script.Meta):
-        name = "Organization onboarding"
-        description = "Standartizated customer onboarding"
+        name = "Створення організації"
+        description = "Метод стандартизованого додавання нового Тенанту."
+        scheduling_enabled = False
         fieldsets = (  
             ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),  
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
