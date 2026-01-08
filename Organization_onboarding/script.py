@@ -40,7 +40,7 @@ class OrganizationOnboarding(Script):
         self.log_debug("Create a Tenant object")
 
         #Creating tenant 
-        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name.replace(" ", "-")),   
+        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name.replace(" ", "-"), allow_unicode=True),   
          custom_field_data={  
                  'edrpou': edrpou,  
                  'full_name': full_name  
