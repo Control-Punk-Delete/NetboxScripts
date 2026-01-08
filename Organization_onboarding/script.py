@@ -14,7 +14,8 @@ class OrganizationOnboarding(Script):
     # General Information  
     form_edrpou = StringVar(  
         description="EDRPOU",  
-        required=True
+        required=True,
+        name="Edrpou"
     ) 
 
     form_short_name = StringVar(  
