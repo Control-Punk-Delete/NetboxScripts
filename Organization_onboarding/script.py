@@ -1,5 +1,5 @@
-from extras.scripts import Script, StringVar  
-from tenancy.models import Tenant, ContactGroup
+from extras.scripts import Script, StringVar, EmailVar
+from tenancy.models import Tenant, ContactGroup, Contact
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
@@ -46,7 +46,7 @@ class OrganizationOnboarding(Script):
         required=False
     )
 
-    input_contact_email = StringVar(
+    input_contact_email = EmailVar(
         description="Contact person email",
         required=False
     )
@@ -60,6 +60,12 @@ class OrganizationOnboarding(Script):
 
         domain_zone = data['input_dns_zone']
         slug = domain_zone.split(".")[0]
+
+
+        contact_name = data['input_contact_name']
+        contact_phone = data['input_contact_phone']
+        contact_email = data['input_contact_email']
+
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
@@ -80,27 +86,41 @@ class OrganizationOnboarding(Script):
              )
         
         tenant.save()
-        self.log_debug(f"Createed Tenant {tenant}")
+        self.log_success(f"Createed Tenant: {tenant}")
 
         # Creating Contact Group
-
+        self.log_debug("Contact Contact Group creation: Started")
         try:
             contact_group = ContactGroup.objects.create( name=short_name )  
-            self.log_success(f"Created contact group: {contact_group.name}")
+            self.log_success(f"Created Contact Group: {contact_group}")
             contact_group.save()  
         
         except Exception as e: 
-            self.log_info(f"Error: { e }")
+            raise AbortScript(f"Error: { e }")
+
 
         # Creating Contacts from input
+        self.log_debug("Contact Contact creation: Started")
+        try:
+            contact = Contact.objects.create( name=short_name,
+                                              phone=contact_phone,
+                                              email=contact_email,
+                                              groups=contact_group
+                                            )  
+            contact.save()
+            self.log_success(f"Created Contact: {contact}")
+        
+        except Exception as e: 
+            raise AbortScript(f"Error during contact creation: { e }")
+
+
 
         # Add links Tenant - Contacts
 
+
         # Create DNS Zone
-        self.log_debug(f"Get NS server")
+        self.log_debug("DNS Zone creation: Started")
         ns = NameServer.objects.get(name="ns.gov.ua")
-        
-        self.log_debug(f"Get NS server - { type(ns) }, {ns}")
 
         try:  
             self.log_debug(f"Creating zone")  
@@ -112,15 +132,10 @@ class OrganizationOnboarding(Script):
                                     **Zone.get_defaults()
                                     )
               
-            self.log_debug("Zone created successfully")  
             zone.nameservers.add(ns)  
             self.log_debug("Nameservers set successfully")  
             zone.save()  
-            self.log_debug("Zone saved successfully")
+            self.log_success(f"Created Zone: {zone}")
             
         except Exception as e:  
-            import traceback  
-            self.log_debug(f"Full traceback: {traceback.format_exc()}")  
-            raise AbortScript(f"Fail to create a zone due error: {e}")
-
-
+            raise AbortScript(f"Error during zone creation: {e}")
