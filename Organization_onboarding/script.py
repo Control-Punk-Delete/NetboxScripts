@@ -10,10 +10,10 @@ class OrganizationOnboarding(Script):
     class Meta(Script.Meta):
         name = "Organization onboarding"
         description = "Standartizated customer onboarding"
-        fieldsets = (  
-            ('Organization Details', ('edrpou', 'short_name', 'full_name', 'dns_zone')),  
-            ('Contact Information', ('contact_name', 'contact_email', 'contact_phone'))  
-        ) 
+        # fieldsets = (  
+        #     ('Organization Details', ('edrpou', 'short_name', 'full_name', 'dns_zone')),  
+        #     ('Contact Information', ('contact_name', 'contact_email', 'contact_phone'))  
+        # ) 
 
     # General Information  
     edrpou = StringVar(  
