@@ -91,7 +91,7 @@ class OrganizationOnboarding(Script):
 
         self.log_debug(f"Get NS server")
         ns = NameServer.objects.get(pk=1)
-        self.log_debug(f"Get NS server - { ns }")
+        self.log_debug(f"Get NS server - { type(ns) }, {ns}")
 
         try:
 
