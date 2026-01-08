@@ -1,6 +1,5 @@
 from extras.scripts import Script, StringVar  
-from tenancy.models import Tenant
-from tenancy.models import ContactGroup  
+from tenancy.models import Tenant, ContactGroup
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
@@ -87,7 +86,7 @@ class OrganizationOnboarding(Script):
 
         try:
             contact_group = ContactGroup.objects.create( name=short_name )  
-            self.log_success(f"Created contact group: {contact_group.name}")ʼ
+            self.log_success(f"Created contact group: {contact_group.name}")
             contact_group.save()  
         
         except Exception as e: 
@@ -99,7 +98,6 @@ class OrganizationOnboarding(Script):
 
         # Create DNS Zone
         self.log_debug(f"Get NS server")
-        #ns = NameServer.objects.get(pk=1)
         ns = NameServer.objects.get(name="ns.gov.ua")
         
         self.log_debug(f"Get NS server - { type(ns) }, {ns}")
