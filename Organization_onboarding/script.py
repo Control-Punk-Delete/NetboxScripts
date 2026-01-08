@@ -1,11 +1,11 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
+from tenancy.models import ContactGroup  
+
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
 
 from utilities.exceptions import AbortScript
-from django.utils.text import slugify
-
     
 class OrganizationOnboarding(Script):
 
@@ -84,11 +84,20 @@ class OrganizationOnboarding(Script):
         self.log_debug(f"Createed Tenant {tenant}")
 
         # Creating Contact Group
+
+        try:
+            contact_group = ContactGroup.objects.create( name=short_name )  
+            self.log_success(f"Created contact group: {contact_group.name}")ʼ
+            contact_group.save()  
+        
+        except Exception as e: 
+            self.log_info(f"Error: { e }")
+
         # Creating Contacts from input
+
         # Add links Tenant - Contacts
 
         # Create DNS Zone
-
         self.log_debug(f"Get NS server")
         #ns = NameServer.objects.get(pk=1)
         ns = NameServer.objects.get(name="ns.gov.ua")
@@ -115,3 +124,5 @@ class OrganizationOnboarding(Script):
             import traceback  
             self.log_debug(f"Full traceback: {traceback.format_exc()}")  
             raise AbortScript(f"Fail to create a zone due error: {e}")
+
+
