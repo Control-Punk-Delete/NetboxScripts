@@ -1,9 +1,9 @@
 from extras.scripts import Script, StringVar
-from tenancy.models import Tenant, ContactGroup, Contact
+from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
-
+from django.contrib.contenttypes.models import ContentType 
 from utilities.exceptions import AbortScript
     
 class OrganizationOnboarding(Script):
@@ -102,7 +102,7 @@ class OrganizationOnboarding(Script):
         # Creating Contacts from input
         self.log_debug("Contact Contact creation: Started")
         try:
-            contact = Contact.objects.create( name=short_name,
+            contact = Contact.objects.create( name=contact_name,
                                               phone=contact_phone,
                                               email=contact_email
                                             )
@@ -117,6 +117,26 @@ class OrganizationOnboarding(Script):
 
 
         # Add links Tenant - Contacts
+
+        content_type = ContentType.objects.get_for_model(Tenant)
+        role = ContactRole.objects.get(pk=1)
+        self.log_debug("Contact asigment creation: Started")
+        try:
+            
+            assignment = ContactAssignment.objects.create(  
+                object_type=content_type,  
+                object_id=tenant.pk,  
+                contact=contact,  
+                role=role
+            )
+            
+            assignment.save()
+            self.log_success(f"Contact { contact } is asigned to Tenant { tenant }")
+
+        except Exception as e: 
+            raise AbortScript(f"Error during contact asigment creation: { e }")
+        
+
 
 
         # Create DNS Zone
