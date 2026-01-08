@@ -90,16 +90,19 @@ class OrganizationOnboarding(Script):
         # Create DNS Zone
 
         self.log_debug(f"Get NS server")
-        ns = NameServer.objects.get(pk=1)
+        #ns = NameServer.objects.get(pk=1)
+        ns = NameServer.objects.get(name="ns.gov.ua")
+        
         self.log_debug(f"Get NS server - { type(ns) }, {ns}")
 
         try:  
-            self.log_debug(f"About to create zone with soa_mname: {type(NameServer.objects.get(pk=1))}")  
+            self.log_debug(f"Creating zone")  
             zone = Zone.objects.create(name=domain_zone,  
                                     status=ZoneStatusChoices.STATUS_ACTIVE,  
                                     tenant=tenant,  
-                                    soa_mname={ "name": "ns.gov.ua"},
-                                    soa_rname=domain_zone  
+                                    soa_mname=ns,
+                                    soa_rname=domain_zone,
+                                    **Zone.get_defaults()
                                     )
               
             self.log_debug("Zone created successfully")  
