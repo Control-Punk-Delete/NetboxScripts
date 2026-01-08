@@ -17,46 +17,46 @@ class OrganizationOnboarding(Script):
 
     # General Information  
     input_edrpou = StringVar(
-        label="ЄДРПОУ",
+        label="Код ЄДРПОУ",
         regex=r'^[0-9]{8}$',
-        description="EDRPOU",  
+        description="Унікальний ідентифікаційний номер юридичної особи в Єдиному державному реєстрі підприємств та організацій України.",  
         required=True,
         min_length=8
     ) 
 
     input_short_name = StringVar(  
-        label="Офіційна коротка назва",
-        description="Short name",  
+        label="Скорочена назва",
+        description="Офіційна абривіатура чи скорочкена назва юридичної особи.",  
         required=True  
     )  
 
     input_full_name = StringVar(
-        label="Офіційна повна назва",
+        label="Повне найменування юридичної особи.",
         description="Full name",  
         required=True  
     )
 
     input_dns_zone = StringVar(
-        label="Домен організації ",
-        description="Organization domain zone. Used in slug creation.",
+        label="Домен",
+        description="Кореневий домен, в зоні якого розміщені ресурси організації. Використовується для створення ідентифікатору slug (тому повинен бути унікальний).",
         required=True
     )
 
     input_contact_name = StringVar(
         label="П.І.Б",
-        description="Contact person full name",
+        description="Прізвище Імʼя По батькові контактної особи.",
         required=True
     )
 
     input_contact_phone = StringVar(
         label="Телефон",
-        description="Contact person phone",
+        description="Контактний номер телефону.",
         required=False
     )
 
     input_contact_email = StringVar(
         label="Email",
-        description="Contact person email",
+        description="Персональна або корпоративна електронна адреса.",
         required=False
     )
 
