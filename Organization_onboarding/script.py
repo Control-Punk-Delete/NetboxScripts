@@ -93,19 +93,21 @@ class OrganizationOnboarding(Script):
         ns = NameServer.objects.get(pk=1)
         self.log_debug(f"Get NS server - { type(ns) }, {ns}")
 
-        try:
-
-            zone = Zone.objects.create(name=domain_zone,
-                                    status=ZoneStatusChoices.STATUS_ACTIVE,
-                                    tenant=tenant,
-                                    soa_mname=ns.name,
-                                    soa_rname=domain_zone
-                                    )
-            zone.nameservers.set(ns)
-            #zone.soa_mname.set(ns)
+        try:  
+            self.log_debug(f"About to create zone with soa_mname: {type(NameServer.objects.get(pk=1))}")  
+            zone = Zone.objects.create(name=domain_zone,  
+                                    status=ZoneStatusChoices.STATUS_ACTIVE,  
+                                    tenant=tenant,  
+                                    soa_mname=NameServer.objects.get(pk=1),  
+                                    soa_rname=domain_zone  
+                                    )  
+            self.log_debug("Zone created successfully")  
+            zone.nameservers.set(ns)  
+            self.log_debug("Nameservers set successfully")  
+            zone.save()  
+            self.log_debug("Zone saved successfully")
             
-            self.log_debug(f"Creating zone - { zone }")
-            zone.save()
-
-        except Exception as e:
+        except Exception as e:  
+            import traceback  
+            self.log_debug(f"Full traceback: {traceback.format_exc()}")  
             raise AbortScript(f"Fail to create a zone due error: {e}")
