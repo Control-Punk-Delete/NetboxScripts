@@ -25,7 +25,7 @@ class OrganizationOnboarding(Script):
     ) 
 
     input_short_name = StringVar(  
-        label="Офіційна коротка назва організації",
+        label="Офіційна коротка назва",
         description="Short name",  
         required=True  
     )  
@@ -37,25 +37,25 @@ class OrganizationOnboarding(Script):
     )
 
     input_dns_zone = StringVar(
-        label="Домен організації (використовується для Slug)",
-        description="Organization domain zone",
+        label="Домен організації ",
+        description="Organization domain zone. Used in slug creation.",
         required=True
     )
 
     input_contact_name = StringVar(
-        label="П.І.Б Адміністратора",
+        label="П.І.Б",
         description="Contact person full name",
         required=True
     )
 
     input_contact_phone = StringVar(
-        label="Контактний номер телефону",
+        label="Телефон",
         description="Contact person phone",
         required=False
     )
 
     input_contact_email = StringVar(
-        label="Електронна адреса",
+        label="Email",
         description="Contact person email",
         required=False
     )
