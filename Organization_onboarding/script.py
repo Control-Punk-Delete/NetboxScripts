@@ -104,9 +104,10 @@ class OrganizationOnboarding(Script):
         try:
             contact = Contact.objects.create( name=short_name,
                                               phone=contact_phone,
-                                              email=contact_email,
-                                              groups=contact_group
-                                            )  
+                                              email=contact_email
+                                            )
+            
+            contact.group.set(contact_group)
             contact.save()
             self.log_success(f"Created Contact: {contact}")
         
