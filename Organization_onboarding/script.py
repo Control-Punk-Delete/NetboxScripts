@@ -102,5 +102,5 @@ class OrganizationOnboarding(Script):
         
             self.log_debug(f"Creating zone - { zone }")
             zone.save()
-        except:
-            self.log_debug("Somesing wrong")
+        except Exception as e:
+            raise AbortScript(f"Fail to create a zone due error: {e}")
