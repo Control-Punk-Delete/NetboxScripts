@@ -100,13 +100,13 @@ class OrganizationOnboarding(Script):
             zone = Zone.objects.create(name=domain_zone,  
                                     status=ZoneStatusChoices.STATUS_ACTIVE,  
                                     tenant=tenant,  
-                                    soa_mname=ns,
+                                    soa_mname=[ns],
                                     soa_rname=domain_zone,
                                     **Zone.get_defaults()
                                     )
               
             self.log_debug("Zone created successfully")  
-            zone.nameservers.set(ns)  
+            #zone.nameservers.set(ns)  
             self.log_debug("Nameservers set successfully")  
             zone.save()  
             self.log_debug("Zone saved successfully")
