@@ -19,7 +19,7 @@ class DnsResolve(Script):
             raise AbortScript(e)
 
     def run(self, data, commit):
-        self.log_debug(f"Starting DNS resolution for {data['fqdn']}")
+        self.log_debug(f"Starting DNS resolution for {data}")
 
         fqdn = data['fqdn'][:-1]
         resolved_ips = self.resolve_dns_record(fqdn)
