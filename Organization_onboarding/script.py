@@ -16,38 +16,46 @@ class OrganizationOnboarding(Script):
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information  
-    input_edrpou = StringVar(  
+    input_edrpou = StringVar(
+        label="ЕДРПОУ",
+        regex=r'^[0-9]{8}$',
         description="EDRPOU",  
         required=True,
-        min_len=8
+        min_length=8
     ) 
 
     input_short_name = StringVar(  
+        label="Офіційна коротка назва організації",
         description="Short name",  
         required=True  
     )  
 
-    input_full_name = StringVar(  
+    input_full_name = StringVar(
+        label="Офіційна повна назва",
         description="Full name",  
         required=True  
     )
 
     input_dns_zone = StringVar(
-       description="Organization domain zone",
-       required=True
+        label="Домен організації (використовується для Slug)",
+        description="Organization domain zone",
+        required=True
     )
 
     input_contact_name = StringVar(
+        label="П.І.Б Адміністратора",
         description="Contact person full name",
         required=True
     )
 
     input_contact_phone = StringVar(
+        label="Контактний номер телефону",
         description="Contact person phone",
         required=False
     )
 
     input_contact_email = StringVar(
+        label="Електронна адреса",
         description="Contact person email",
         required=False
     )
