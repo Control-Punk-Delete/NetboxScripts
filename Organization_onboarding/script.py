@@ -2,6 +2,7 @@ from extras.scripts import Script, StringVar
 from tenancy.models import Tenant
 
 from utilities.exceptions import AbortScript
+from django.utils.text import slugify
 
     
 class OrganizationOnboarding(Script):  
@@ -41,12 +42,13 @@ class OrganizationOnboarding(Script):
         self.log_debug("Create a Tenant object")
 
         # # Full tenant creation with all fields  
-        # tenant = Tenant.objects.create(  
-        # name=short_name,  
-        # slug=slugify(short_name),   
-        # custom_field_data={  
-        #         'edrpou': edrpou,  
-        #         'full_name': full_name  
-        #         }  
-        #     )
-        # self.log_debug(f"Createed Tenant {tenant}")
+        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name),   
+         custom_field_data={  
+                 'edrpou': edrpou,  
+                 'full_name': full_name  
+                 }  
+             )
+        
+        tenant.save()
+        
+        self.log_debug(f"Createed Tenant {tenant}")
