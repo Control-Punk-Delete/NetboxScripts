@@ -93,10 +93,10 @@ class OrganizationOnboarding(Script):
         ns = Nameservers.objects.get(pk=1)
         self.log_debug(f"Get NS server - { ns }")
 
-        zone = Zones.objects.create(name=zone,
-                                   status=ZonesStatusChoices.STATUS_ACTIVE,
-                                   tenant=tenant,
-                                   nameservers=[ns])
+        # zone = Zones.objects.create(name=zone,
+        #                            status=ZonesStatusChoices.STATUS_ACTIVE,
+        #                            tenant=tenant,
+        #                            nameservers=[ns])
         
-        self.debug(f"Creating zone - { zone }")
-        zone.save()
+        # self.debug(f"Creating zone - { zone }")
+        # zone.save()
