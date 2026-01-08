@@ -5,7 +5,12 @@ from utilities.exceptions import AbortScript
 from django.utils.text import slugify
 
     
-class OrganizationOnboarding(Script):  
+class OrganizationOnboarding(Script):
+
+    class Meta(Script.Meta):
+        name = "Organization onboarding"
+        description = "Standartizated customer onboarding"
+
     # General Information  
     form_edrpou = StringVar(  
         description="EDRPOU",  
