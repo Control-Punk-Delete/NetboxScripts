@@ -1,5 +1,7 @@
 from extras.scripts import Script, StringVar  
 from tenancy.models import Tenant
+from netbox_dns.models import (Zone, Nameservers)
+from netbox_dns.choices import (ZoneStatusChoices)
 
 from utilities.exceptions import AbortScript
 from django.utils.text import slugify
@@ -24,10 +26,12 @@ class OrganizationOnboarding(Script):
         description="Short name",  
         required=True  
     )  
+
     input_full_name = StringVar(  
         description="Full name",  
         required=True  
-    ) 
+    )
+
     input_dns_zone = StringVar(
        description="Organization domain zone",
        required=True
@@ -84,3 +88,15 @@ class OrganizationOnboarding(Script):
         # Add links Tenant - Contacts
 
         # Create DNS Zone
+
+        self.log_debug(f"Get NS server")
+        ns = Nameservers.objects.get(pk=1)
+        self.log_debug(f"Get NS server - { ns }")
+
+        zone = Zone.objects.create(name=zone,
+                                   status=ZoneStatusChoices.STATUS_ACTIVE,
+                                   tenant=tenant,
+                                   nameservers=[ns])
+        
+        self.debug(f"Creating zone - { zone }")
+        zone.save()
