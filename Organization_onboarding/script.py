@@ -97,8 +97,8 @@ class OrganizationOnboarding(Script):
 
             zone = Zone.objects.create(name=zone,
                                     status=ZoneStatusChoices.STATUS_ACTIVE,
-                                    tenant=tenant,
-                                    nameservers=[ns])
+                                    tenant=tenant)
+            zone.nameservers.set(ns)
         
             self.log_debug(f"Creating zone - { zone }")
             zone.save()
