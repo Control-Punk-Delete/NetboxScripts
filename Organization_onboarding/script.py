@@ -10,7 +10,8 @@ class OrganizationOnboarding(Script):
     form_edrpou = StringVar(  
         description="EDRPOU",  
         required=True
-    )  
+    ) 
+
     form_short_name = StringVar(  
         description="Short name",  
         required=True  
@@ -29,12 +30,12 @@ class OrganizationOnboarding(Script):
         required=True
     )
 
-    form_contact_phone = Script(
+    form_contact_phone = StringVar(
         description="Contact person phone",
         required=False
     )
 
-    form_contact_email = Script(
+    form_contact_email = StringVar(
         description="Contact person email",
         required=False
     )
