@@ -19,6 +19,7 @@ class OrganizationOnboarding(Script):
     input_edrpou = StringVar(  
         description="EDRPOU",  
         required=True,
+        min_len=8
     ) 
 
     input_short_name = StringVar(  
