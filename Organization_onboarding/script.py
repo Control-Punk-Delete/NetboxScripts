@@ -6,8 +6,6 @@ from django.utils.text import slugify
 
     
 class OrganizationOnboarding(Script):  
-
-
     # General Information  
     form_edrpou = StringVar(  
         description="EDRPOU",  
@@ -25,8 +23,22 @@ class OrganizationOnboarding(Script):
        description="Organization domain zone",
        required=True
     )
-  
-  
+
+    form_contact_name = StringVar(
+        description="Contact person full name",
+        required=True
+    )
+
+    form_contact_phone = Script(
+        description="Contact person phone",
+        required=False
+    )
+
+    form_contact_email = Script(
+        description="Contact person email",
+        required=False
+    )
+
 
     def run(self, data, commit):  
         # Access the form data  
@@ -61,3 +73,5 @@ class OrganizationOnboarding(Script):
         # Creating Contact Group
         # Creating Contacts from input
         # Add links Tenant - Contacts
+
+        # Create DNS Zone
