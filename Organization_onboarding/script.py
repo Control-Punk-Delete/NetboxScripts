@@ -17,7 +17,7 @@ class OrganizationOnboarding(Script):
 
     # General Information  
     input_edrpou = StringVar(
-        label="ЕДРПОУ",
+        label="ЄДРПОУ",
         regex=r'^[0-9]{8}$',
         description="EDRPOU",  
         required=True,
