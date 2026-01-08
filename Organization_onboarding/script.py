@@ -98,10 +98,11 @@ class OrganizationOnboarding(Script):
             zone = Zone.objects.create(name=domain_zone,
                                     status=ZoneStatusChoices.STATUS_ACTIVE,
                                     tenant=tenant,
-                                    soa_mname=ns,
                                     soa_rname=domain_zone
                                     )
             zone.nameservers.set(ns)
+            zone.soa_mname.set(ns)
+
 
         
             self.log_debug(f"Creating zone - { zone }")
