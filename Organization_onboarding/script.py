@@ -33,16 +33,14 @@ class OrganizationOnboarding(Script):
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
 
-        
+        # Check is Tenant with uniq identificator is not already exist
         if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
             raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
         
-
-            
         self.log_debug("Create a Tenant object")
 
-        # # Full tenant creation with all fields  
-        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name.replase(" ", "-")),   
+        #Creating tenant 
+        tenant = Tenant.objects.create( name=short_name, slug=slugify(short_name.replace(" ", "-")),   
          custom_field_data={  
                  'edrpou': edrpou,  
                  'full_name': full_name  
@@ -50,5 +48,8 @@ class OrganizationOnboarding(Script):
              )
         
         tenant.save()
-        
         self.log_debug(f"Createed Tenant {tenant}")
+
+        # Creating Contact Group
+        # Creating Contacts from input
+        # Add links Tenant - Contacts
