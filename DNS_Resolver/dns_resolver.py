@@ -19,6 +19,10 @@ class DnsResolve(Script):
             raise AbortScript(e)
 
     def run(self, data, commit):
+        
+        if data['type'] != "A":
+            raise AbortScript("Only A Record is not need to be cheked")
+        
         self.log_debug(f"Starting DNS resolution for {data}")
 
         fqdn = data['fqdn'][:-1]
