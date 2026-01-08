@@ -98,7 +98,7 @@ class OrganizationOnboarding(Script):
             zone = Zone.objects.create(name=domain_zone,  
                                     status=ZoneStatusChoices.STATUS_ACTIVE,  
                                     tenant=tenant,  
-                                    soa_mname=NameServer.objects.get(name=domain_zone),  
+                                    soa_mname=NameServer.objects.get(name="ns.gov.ua"),  
                                     soa_rname=domain_zone  
                                     )
               
