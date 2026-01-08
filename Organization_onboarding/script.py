@@ -59,8 +59,8 @@ class OrganizationOnboarding(Script):
         short_name = data['input_short_name']  
         full_name = data['input_full_name']
 
-        zone = data['input_dns_zone']
-        slug = zone.split(".")[0]
+        domain_zone = data['input_dns_zone']
+        slug = domain_zone.split(".")[0]
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
@@ -95,10 +95,14 @@ class OrganizationOnboarding(Script):
 
         try:
 
-            zone = Zone.objects.create(name=zone,
+            zone = Zone.objects.create(name=domain_zone,
                                     status=ZoneStatusChoices.STATUS_ACTIVE,
-                                    tenant=tenant)
+                                    tenant=tenant,
+                                    soa_mname=ns,
+                                    soa_rname=domain_zone
+                                    )
             zone.nameservers.set(ns)
+
         
             self.log_debug(f"Creating zone - { zone }")
             zone.save()
