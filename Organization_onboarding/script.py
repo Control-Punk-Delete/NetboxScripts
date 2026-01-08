@@ -100,7 +100,7 @@ class OrganizationOnboarding(Script):
                                     tenant=tenant,
                                     nameservers=[ns])
         
-            self.debug(f"Creating zone - { zone }")
+            self.log_debug(f"Creating zone - { zone }")
             zone.save()
         except:
-            self.debug("Somesing wrong")
+            self.log_debug("Somesing wrong")
