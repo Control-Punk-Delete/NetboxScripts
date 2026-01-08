@@ -10,41 +10,37 @@ class OrganizationOnboarding(Script):
     class Meta(Script.Meta):
         name = "Organization onboarding"
         description = "Standartizated customer onboarding"
-        # fieldsets = (  
-        #     ('Organization Details', ('edrpou', 'short_name', 'full_name', 'dns_zone')),  
-        #     ('Contact Information', ('contact_name', 'contact_email', 'contact_phone'))  
-        # ) 
 
     # General Information  
-    edrpou = StringVar(  
+    input_edrpou = StringVar(  
         description="EDRPOU",  
         required=True,
     ) 
 
-    short_name = StringVar(  
+    input_short_name = StringVar(  
         description="Short name",  
         required=True  
     )  
-    full_name = StringVar(  
+    input_full_name = StringVar(  
         description="Full name",  
         required=True  
     ) 
-    dns_zone = StringVar(
+    input_dns_zone = StringVar(
        description="Organization domain zone",
        required=True
     )
 
-    contact_name = StringVar(
+    input_contact_name = StringVar(
         description="Contact person full name",
         required=True
     )
 
-    contact_phone = StringVar(
+    input_contact_phone = StringVar(
         description="Contact person phone",
         required=False
     )
 
-    contact_email = StringVar(
+    input_contact_email = StringVar(
         description="Contact person email",
         required=False
     )
@@ -52,11 +48,11 @@ class OrganizationOnboarding(Script):
 
     def run(self, data, commit):  
         # Access the form data  
-        edrpou = data['edrpou']  
-        short_name = data['short_name']  
-        full_name = data['full_name']
+        edrpou = data['input_edrpou']  
+        short_name = data['input_short_name']  
+        full_name = data['input_full_name']
 
-        zone = data['dns_zone']
+        zone = data['input_dns_zone']
         slug = zone.split(".")[0]
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
