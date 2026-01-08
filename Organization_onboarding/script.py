@@ -1,4 +1,4 @@
-from extras.scripts import Script, StringVar, EmailVar
+from extras.scripts import Script, StringVar
 from tenancy.models import Tenant, ContactGroup, Contact
 
 from netbox_dns.models import (NameServer, Zone)
@@ -46,7 +46,7 @@ class OrganizationOnboarding(Script):
         required=False
     )
 
-    input_contact_email = EmailVar(
+    input_contact_email = StringVar(
         description="Contact person email",
         required=False
     )
