@@ -510,8 +510,8 @@ class DnsResolve(Script):
                 self.log_debug(f"IP Validation is end tags: {TAGS_IP_VALIDATION}")
 
                 if "cdn" in TAGS_IP_VALIDATION:
-                    tag = Tag.objects.get_or_create(name="cdn")
-                    dns_record.tags.add(tag)
+                    #tag = Tag.objects.get_or_create(name="cdn")
+                    dns_record.tags.add("cdn")
                     dns_record.save()
                     continue
 
@@ -520,7 +520,7 @@ class DnsResolve(Script):
                     self.log_debug(f"Get {ipaddr} id {ipaddr.id}, creted: {created}")
 
                     dns_record.custom_field_data['ip_address'].add(ipaddr.id)
-                    
+
                     self.log_debug(f"DNS Record update ip add")
                     dns_record.save()
 
