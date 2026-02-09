@@ -425,12 +425,12 @@ class DnsResolve(Script):
 
         def is_cdn(self, ip):
             if ip.version == 4:
-                for cdn_network in self.CDN_IPSv4_LIST:
+                for cdn_network in CDN_IPSv4_LIST:
                     if ip in cdn_network:
                         return True
                     
             elif ip.version == 6:
-                for cdn_network in self.CDN_IPSv6_LIST:
+                for cdn_network in CDN_IPSv6_LIST:
                     if ip in cdn_network:
                         return True
             else:
