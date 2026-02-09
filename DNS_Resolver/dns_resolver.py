@@ -470,11 +470,11 @@ class DnsResolve(Script):
         # Get IP address 
         dns_record = Record.objects.get(pk=data['id'])
         current_ips = []
-        tenant_id = None  
+        tenant = None  
         if data['tenant']:  
-            tenant_id = Tenant.objects.get(pk=data['tenant']['id']) 
+            tenant = Tenant.objects.get(pk=data['tenant']['id']) 
 
-        self.log_debug(f"See the tenant {tenant_id}")
+        self.log_debug(f"See the tenant {tenant}")
 
         self.log_debug("Get existed IP address")
 
@@ -529,7 +529,7 @@ class DnsResolve(Script):
                     continue
 
                 else:
-                    ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check,  defaults={'status': 'active', 'tenant_id': tenant_id} )
+                    ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check,  defaults={'status': 'active', 'tenant': tenant} )
                     self.log_debug(f"Get {ipaddr} id {ipaddr.id}, creted: {created}")
                     
                     ip_address_ids.append(ipaddr.id)
