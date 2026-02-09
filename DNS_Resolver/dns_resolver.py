@@ -498,7 +498,7 @@ class DnsResolve(Script):
 
             for ip_to_check in resolved_ips:
                 self.log_debug(f"Start ip_validation {ip_to_check}")
-                TAGS_IP_VALIDATION = ip_validator(ip_to_check)
+                TAGS_IP_VALIDATION = ip_validator(ip=ip_to_check)
 
                 self.log_debug(f"IP Validation is end tags: {TAGS_IP_VALIDATION}")
 
