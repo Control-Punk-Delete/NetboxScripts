@@ -7,6 +7,11 @@ from extras.models import Tag
 
 class CDNFinder(Script):
 
+    class Meta(Script.Meta):
+        name = "ІР Валідатор"
+        description = "Скрипт виконує автоматичну валідацію ІР адрес"
+        scheduling_enabled = False
+
     CDN_IPSv4_LIST = []
     NEW_TAGS = []
 
