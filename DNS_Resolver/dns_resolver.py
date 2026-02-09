@@ -469,6 +469,13 @@ class DnsResolve(Script):
 
         # Get IP address 
         dns_record = Record.objects.get(pk=data['id'])
+        current_ips = []
+        self.log_debug("Get existed IP address")
+
+        if  data['custom_fields']['ip_address']:
+            for ip in data['custom_fields']['ip_address']:
+                current_ips.append(ip.id)
+
         self.log_debug(f"Start script with {data}.")
         
         if data['type'] != "A":
@@ -510,77 +517,25 @@ class DnsResolve(Script):
                 self.log_debug(f"IP Validation is end tags: {TAGS_IP_VALIDATION}")
 
                 if "cdn" in TAGS_IP_VALIDATION:
-                    #tag = Tag.objects.get_or_create(name="cdn")
                     dns_record.tags.add("cdn")
+                    self.log_debug(f"To record add tag cdn becouse one of returned ip is CDN")
                     dns_record.save()
                     continue
 
                 else:
                     ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check, defaults={'status': 'active'})
                     self.log_debug(f"Get {ipaddr} id {ipaddr.id}, creted: {created}")
-
-                    dns_record.custom_field_data['ip_address'].add(ipaddr.id)
-
-                    self.log_debug(f"DNS Record update ip add")
-                    dns_record.save()
-
-
-
-
-
-
-
-                
-            #TAGS = self.ip_validate()
-
-            #     self.log_debug(f"Processing IP: {ip_to_check}")
-
-            #     if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
-            #         self.log_info(f"IP {ip_to_check} already exists in database")
-            #         existing_ip = IPAddress.objects.get(address=str(ip_to_check))
-
-            #         ip_address_ids.append(existing_ip.id)
-            #         self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
-
-            #     else:
-            #         self.log_info(f"IP Address creating {ip_to_check} - started")
-
-            #         if data['tenant']:
-            #             self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
-            #             tenant = Tenant.objects.get(pk = data['tenant']['id'])
-            #             self.log_debug(f"Find tenant - {tenant}: {type(tenant)}")
-
-            #         else:
-            #             self.log_debug("Record not asign to any tenant")
-            #             tenant = None
-
-            #         ip = IPAddress( address = ip_to_check,
-            #                         tenant = tenant,
-            #                         status = IPAddressStatusChoices.STATUS_ACTIVE )
                     
-                    
-            #         self.log_debug(f"IP object created for {ip}, validating and saving.")
-            #         ip.full_clean()
-            #         ip.save()
+                    ip_address_ids.append(ipaddr.id)
+                    self.log_debug(f"Add {ipaddr} to new ip")
 
-            #         ip_address_ids.append(ip.id)
-            #         self.log_debug(f"Appended new created ip {ip.id} ")
-
-            # self.log_info(f"Final list of IP address IDs to associate: {ip_address_ids}")
-
-            # current_ips = []
-
-            # if  data['custom_fields']['ip_address']:
-            #     for ip in data['custom_fields']['ip_address']:
-            #         current_ips.append(ip.id)
-
-            # list_of_new_ips =  list(set(current_ips + ip_address_ids))
+            
+            list_of_new_ips =  list(set(current_ips + ip_address_ids))
             
             # # Update the custom field  
-            # dns_record.custom_field_data['ip_address'] =  list_of_new_ips  
+            dns_record.custom_field_data['ip_address'] =  list_of_new_ips  
             
-            # if commit:  
-            #     dns_record.save()  
-            #     self.log_success(f"Updated DNS record {dns_record.name} with IP addresses")  
+            if commit:  
+                 dns_record.save()  
+                 self.log_success(f"Updated DNS record {dns_record.name} with IP addresses")  
         
-            # self.log_success(f"Work completed.")
