@@ -62,8 +62,8 @@ class DnsResolve(Script):
 
                 ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check, defaults={'status': 'active'})
 
-                self.log_debug = (f"Get {ipaddr}, creted: {created}")
-                
+                self.log_debug(f"Get {ipaddr}, creted: {created}")
+
 
 
                 
