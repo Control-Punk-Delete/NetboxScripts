@@ -470,9 +470,10 @@ class DnsResolve(Script):
         # Get IP address 
         dns_record = Record.objects.get(pk=data['id'])
         current_ips = []
-        tenant_id = None  
-        if dns_record.tenant:  
-            tenant_id = Tenant.objects.get(pk=dns_record.tenant['id']) 
+        #tenant_id = None  
+        #if dns_record.tenant:  
+        #    tenant_id = Tenant.objects.get(pk=dns_record.tenant['id']) 
+        self.log_debug(f"See the tenant{dns_record.tenant['id']}")
 
         self.log_debug("Get existed IP address")
 
