@@ -498,7 +498,14 @@ class DnsResolve(Script):
 
             for ip_to_check in resolved_ips:
                 self.log_debug(f"Start ip_validation {ip_to_check}")
-                TAGS_IP_VALIDATION = ip_validator(self, ip=ip_to_check)
+
+                try:
+                    ip_obj = ipaddress.IPv4Address(ip_to_check)
+                except Exception as e:
+                    self.log_debug(f"Cand convert ip to IPv4 object {e}")
+
+
+                TAGS_IP_VALIDATION = ip_validator(self, ip=ip_obj)
 
                 self.log_debug(f"IP Validation is end tags: {TAGS_IP_VALIDATION}")
 
