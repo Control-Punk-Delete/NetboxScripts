@@ -517,9 +517,10 @@ class DnsResolve(Script):
 
                 else:
                     ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check, defaults={'status': 'active'})
-                    self.log_debug(f"Get {ipaddr}, creted: {created}")
+                    self.log_debug(f"Get {ipaddr} id {ipaddr.id}, creted: {created}")
 
                     dns_record.custom_field_data['ip_address'].add(ipaddr.id)
+                    
                     self.log_debug(f"DNS Record update ip add")
                     dns_record.save()
 
