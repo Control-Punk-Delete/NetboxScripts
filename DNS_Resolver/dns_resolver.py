@@ -41,8 +41,9 @@ class DnsResolve(Script):
         if len(resolved_ips) == 0:
             self.log_debug(f"0 ip address is returned - domain is inactive.")
             dns_record = Record.objects.get(pk=data['id'])
-            self.log_debug(f"Status changing for {dns_record}")
+            self.log_debug(f"Status changing form {dns_record.status} to inactive")
             dns_record.status = "inactive"
+            dns_record.save()
             self.log_success(f"Domain resolving script ended. Inactive domain")
         else:
 
