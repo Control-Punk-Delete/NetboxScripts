@@ -5,12 +5,15 @@ from extras.scripts import *
 from ipam.models import IPAddress
 from netbox_dns.models import (Record)
 from utilities.exceptions import AbortScript
-from ipam.choices import IPAddressStatusChoices
 from tenancy.models import Tenant  
-from extras.models import Tag
 
  
 class DnsResolve(Script):
+
+    class Meta(Script.Meta):
+        name = "Domain Record resolver"
+        description = "Виконання DNS Record Resolve, перевіряє ІР Address та звʼязує в Custom fields."
+        scheduling_enabled = False
 
     def resolve_dns_record(self, record):
         self.log_debug(f"Start resolving {record}.")
