@@ -461,7 +461,7 @@ class DnsResolve(Script):
             if ip.is_link_local:
                 TAGS.append("link-local")
 
-            if self.is_cdn(self, ip=ip):
+            if is_cdn(self, ip=ip):
                 TAGS.append("cdn")
 
             return TAGS
