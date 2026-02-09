@@ -62,11 +62,8 @@ class CDNFinder(Script):
                 tag, created = Tag.objects.get_or_create(name="cdn")
                 self.NEW_TAGS.append(tag)
                 
-
             self.log_info(f"Global IP Address is verificated!")
             self.log_debug("Add tag - 'verificated'")
-            tag, created = Tag.objects.get_or_create(name="verificated")
-            self.NEW_TAGS.append(tag)
     
     
     def run(self, data, commit):
