@@ -10,6 +10,10 @@ from tenancy.models import Tenant
  
 class DnsResolve(Script):
 
+
+    def ip_validate(self, ip_add: str = None):
+        return ['cdn']
+
     def resolve_dns_record(self, record):
         self.log_debug(f"Start resolving {record}.")
         try:
@@ -25,6 +29,8 @@ class DnsResolve(Script):
 
     def run(self, data, commit):
 
+        # Get IP address 
+        dns_record = Record.objects.get(pk=data['id'])
         self.log_debug(f"Start script with {data}.")
         
         if data['type'] != "A":
@@ -34,59 +40,71 @@ class DnsResolve(Script):
         self.log_debug(f"Extracted fqdn: {fqdn}")
 
         resolved_ips = self.resolve_dns_record(fqdn)
-
         self.log_debug(f"Resolving fqdn returned {len(resolved_ips)}. 0 - Inactive, > 1 - start IP validate.")
 
 
+        # IP Address is not returned
+
         if len(resolved_ips) == 0:
             self.log_debug(f"0 ip address is returned - domain is inactive.")
-            dns_record = Record.objects.get(pk=data['id'])
             self.log_debug(f"Status changing form {dns_record.status} to inactive")
             dns_record.status = "inactive"
             dns_record.save()
             self.log_success(f"Domain resolving script ended. Inactive domain")
+        
+        # IP Address is returned (next check is CDN)
         else:
 
             self.log_debug(f"Resolved IPs: {resolved_ips}")
-
             ip_address_ids = []
 
             for ip_to_check in resolved_ips:
-                self.log_debug(f"Processing IP: {ip_to_check}")
 
-                if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
-                    self.log_info(f"IP {ip_to_check} already exists in database")
-                    existing_ip = IPAddress.objects.get(address=str(ip_to_check))
+                ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check, defaults={'status': 'active'})
 
-                    ip_address_ids.append(existing_ip.id)
-                    self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
+                self.log_debug = (f"Get {ipaddr}, creted: {created}")
+                
 
-                else:
-                    self.log_info(f"IP Address creating {ip_to_check} - started")
 
-                    if data['tenant']:
-                        self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
-                        tenant = Tenant.objects.get(pk = data['tenant']['id'])
+                
+            #TAGS = self.ip_validate()
 
-                        self.log_debug(f"Find tenant - {tenant}: {type(tenant)}")
-                    else:
-                        self.log_debug("Record not asign to any tenant")
-                        tenant = None
+            #     self.log_debug(f"Processing IP: {ip_to_check}")
 
-                    ip = IPAddress( address = ip_to_check,
-                                    tenant = tenant,
-                                    status = IPAddressStatusChoices.STATUS_ACTIVE )
+            #     if IPAddress.objects.filter(address=str(ip_to_check)).exists():  
+            #         self.log_info(f"IP {ip_to_check} already exists in database")
+            #         existing_ip = IPAddress.objects.get(address=str(ip_to_check))
+
+            #         ip_address_ids.append(existing_ip.id)
+            #         self.log_debug(f"Appended existing IP ID {existing_ip.id} for IP {ip_to_check}")
+
+            #     else:
+            #         self.log_info(f"IP Address creating {ip_to_check} - started")
+
+            #         if data['tenant']:
+            #             self.log_debug(f"Search for tenant asign - {data['tenant']['display']}")
+            #             tenant = Tenant.objects.get(pk = data['tenant']['id'])
+            #             self.log_debug(f"Find tenant - {tenant}: {type(tenant)}")
+
+            #         else:
+            #             self.log_debug("Record not asign to any tenant")
+            #             tenant = None
+
+            #         ip = IPAddress( address = ip_to_check,
+            #                         tenant = tenant,
+            #                         status = IPAddressStatusChoices.STATUS_ACTIVE )
                     
-                    self.log_debug(f"IP object created for {ip}, validating and saving.")
-                    ip.full_clean()
-                    ip.save()
+                    
+            #         self.log_debug(f"IP object created for {ip}, validating and saving.")
+            #         ip.full_clean()
+            #         ip.save()
 
-                    ip_address_ids.append(ip.id)
-                    self.log_debug(f"Appended new created ip {ip.id} ")
+            #         ip_address_ids.append(ip.id)
+            #         self.log_debug(f"Appended new created ip {ip.id} ")
 
-            self.log_info(f"Final list of IP address IDs to associate: {ip_address_ids}")
-            # Get the DNS record  
-            dns_record = Record.objects.get(pk=data['id'])  
+            # self.log_info(f"Final list of IP address IDs to associate: {ip_address_ids}")
+
+
 
             current_ips = []
 
