@@ -528,7 +528,7 @@ class DnsResolve(Script):
                     continue
 
                 else:
-                    ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check,  defaults={'status': 'active', 'tenant_id': tenant_id} )
+                    ipaddr, created = IPAddress.objects.get_or_create(address=ip_to_check,  defaults={'status': 'active'} )
                     self.log_debug(f"Get {ipaddr} id {ipaddr.id}, creted: {created}")
                     
                     ip_address_ids.append(ipaddr.id)
