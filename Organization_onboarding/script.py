@@ -16,7 +16,7 @@ class OrganizationOnboarding(Script):
         scheduling_enabled = False
         fieldsets = (  
             ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('Services',('input_services')),
+            ('Services',('direction')),
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
@@ -28,20 +28,15 @@ class OrganizationOnboarding(Script):
     #    choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
     #    services_choices = choice_set.choices  
     #except CustomFieldChoiceSet.DoesNotExist:
-    
-    CHOICES = (
-    ('n', 'North'),
-    ('s', 'South'),
-    ('e', 'East'),
-    ('w', 'West')
-)
 
-    input_services = MultiChoiceVar(
-        label="Сервіси", 
-        choices=ChoiceVar(choices=CHOICES),
-        description="Перелік сервісів, які надані для огранізації",
-        required=False  
+    CHOICES = (
+        ('n', 'North'),
+        ('s', 'South'),
+        ('e', 'East'),
+        ('w', 'West')
     )
+
+    direction = ChoiceVar(choices=CHOICES)
 
 
     input_edrpou = StringVar(
@@ -93,7 +88,7 @@ class OrganizationOnboarding(Script):
         # Access the form data
 
         #selected_services = data['input_services']
-        self.log_debug(f"Extracted services data: {data['input_services']}")
+        self.log_debug(f"Extracted services data: {data['direction']}")
 
 
         edrpou = data['input_edrpou']  
