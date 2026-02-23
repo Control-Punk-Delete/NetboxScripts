@@ -14,20 +14,25 @@ class OrganizationOnboarding(Script):
         name = "Створення організації"
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
-        fieldsets = (  
-            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('Інформація про сервіси', ('input_services_list')),
-            ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone'))
-            )
+        #fieldsets = (  
+        #    ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+        #    ('Інформація про сервіси', ('input_services_list')),
+        #    ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone'))
+        #    )
 
     # General Information 
-    # Get the choice set and extract choices 
+    # Get the choice set and extract choices
+
+    try:  
+        services_choices = CustomFieldChoiceSet.objects.get(name="services_choices_list").choices  
+    except CustomFieldChoiceSet.DoesNotExist:  
+        services_choices = [] 
 
 
     input_services_list = MultiChoiceVar(
         label="Сервіси",
         description="Перелік сервісів визначений в services_choices_list, які надаються організації.",
-        choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices,
+        choices=services_choices,
         required=False,
         )
 
