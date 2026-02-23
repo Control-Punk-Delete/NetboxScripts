@@ -24,23 +24,18 @@ class OrganizationOnboarding(Script):
 
 
 
-    try:  
-        choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
-        services_choices = choice_set.choices  
-    except CustomFieldChoiceSet.DoesNotExist:  
-        services_choices = [['a','A'],['b','B']]
+    #try:  
+    #    choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
+    #    services_choices = choice_set.choices  
+    #except CustomFieldChoiceSet.DoesNotExist:  
 
+    input_services = MultiChoiceVar(
+        label="Сервіси", 
+        choices= [['a','A'],['b','B']],
+        description="Перелік сервісів, які надані для огранізації",
+        required=False  
+    )
 
-
-    try:
-        input_services = MultiChoiceVar(
-            label="Сервіси", 
-            choices= services_choices,
-            description="Перелік сервісів, які надані для огранізації",
-            required=False  
-        )
-    except AttributeError as e:
-        pass
 
     input_edrpou = StringVar(
         label="Код ЄДРПОУ",
