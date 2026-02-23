@@ -228,11 +228,10 @@ class OrganizationOnboarding(Script):
             'slug,name'
         ]
         for tenant in tenants:
-            self.log_debug(f'Created output file {tenant.keys()}')
+            self.log_debug(f'Created output file {tenant}')
             attrs = [
                 tenant.slug,
                 tenant.name
-
             ]
             output.append(','.join(attrs))
 
