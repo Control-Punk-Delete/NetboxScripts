@@ -45,7 +45,7 @@ class OrganizationOnboarding(Script):
 
     input_short_name = StringVar(  
         label="Скорочена назва",
-        description="Офіційна абривіатура чи скорочкена назва юридичної особи.",  
+        description="Офіційна абревіатура або скорочкена назва юридичної особи.",  
         required=True  
     )  
 
@@ -108,7 +108,7 @@ class OrganizationOnboarding(Script):
         services = data['input_services_list']
         self.log_debug(f"Extracted services data: {services}")
 
-        edr_start_date = data['input_edr_service_start_date']
+        edr_start_date = str(data['input_edr_service_start_date'])
         self.log_debug(f"Extracted edr start date data: {edr_start_date}")
 
         edr_vendors = data['input_edr_service_vendor']
