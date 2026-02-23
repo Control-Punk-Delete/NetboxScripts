@@ -90,8 +90,8 @@ class OrganizationOnboarding(Script):
     def run(self, data, commit):  
         # Access the form data
 
-        selected_services = data['input_services']
-        self.log_debug(f"Extracted services data: {selected_services}")
+        #selected_services = data['input_services']
+        self.log_debug(f"Extracted services data: {data['input_services']}")
 
 
         edrpou = data['input_edrpou']  
@@ -122,8 +122,7 @@ class OrganizationOnboarding(Script):
         tenant = Tenant.objects.create( name=short_name, slug=slug,   
          custom_field_data={  
                  'edrpou': edrpou,  
-                 'full_name': full_name,
-                 'services': selected_services  
+                 'full_name': full_name
                  }  
              )
         
