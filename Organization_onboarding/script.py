@@ -22,17 +22,7 @@ class OrganizationOnboarding(Script):
     # General Information 
     # Get the choice set and extract choices 
 
-    #try:  
-    #    choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
-    #    services_choices = choice_set.choices  
-    #except CustomFieldChoiceSet.DoesNotExist:
-
-    direction = ChoiceVar(choices=(
-        ('n', 'North'),
-        ('s', 'South'),
-        ('e', 'East'),
-        ('w', 'West')
-    ))
+    input_services = ChoiceVar(label="Сервіси", choices=CustomFieldChoiceSet.objects.get(name='services_choice_list').choices)
 
 
     input_edrpou = StringVar(
@@ -84,7 +74,7 @@ class OrganizationOnboarding(Script):
         # Access the form data
 
         #selected_services = data['input_services']
-        self.log_debug(f"Extracted services data: {data['direction']}")
+        self.log_debug(f"Extracted services data: {data['services']}")
 
 
         edrpou = data['input_edrpou']  
