@@ -225,14 +225,14 @@ class OrganizationOnboarding(Script):
         tenants = Tenant.objects.filter(name=short_name)
         
         output = [
-            'slug,name'
+            'id,slug,name'
         ]
         for tenant in tenants:
             self.log_debug(f'Created output file {tenant}')
             attrs = [
+                tenant.id,
                 tenant.slug,
-                tenant.name,
-                tenant.custom_fields.full_name
+                tenant.name
             ]
             output.append(','.join(attrs))
 
