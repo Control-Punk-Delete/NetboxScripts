@@ -22,22 +22,9 @@ class OrganizationOnboarding(Script):
     # General Information 
     # Get the choice set and extract choices 
 
-
-    @classmethod  
-    def get_services_choices(cls):  
-        """Get choices from the CustomFieldChoiceSet"""  
-        try:  
-            choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
-            return choice_set.choices  
-        except CustomFieldChoiceSet.DoesNotExist:  
-            return []
-
-
-
-
     input_services = MultiChoiceVar(
         label="Сервіси", 
-        choices= get_services_choices(),  
+        choices= (('a', 'A'),('b', 'B')),  
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
