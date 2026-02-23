@@ -10,33 +10,29 @@ from utilities.exceptions import AbortScript
 class OrganizationOnboarding(Script):
 
 
-    class Meta(Script.Meta):
-        name = "Створення організації"
-        description = "Метод стандартизованого додавання нового Тенанту."
-        scheduling_enabled = False
-        fieldsets = (  
-            ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('Services',('direction')),
-            ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
+    #class Meta(Script.Meta):
+    #    name = "Створення організації"
+    #    description = "Метод стандартизованого додавання нового Тенанту."
+    #    scheduling_enabled = False
+    #    fieldsets = (  
+    #        ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+    #        ('Services',('direction')),
+    #        ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
     # Get the choice set and extract choices 
-
-
 
     #try:  
     #    choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
     #    services_choices = choice_set.choices  
     #except CustomFieldChoiceSet.DoesNotExist:
 
-    CHOICES = (
+    direction = ChoiceVar(choices=(
         ('n', 'North'),
         ('s', 'South'),
         ('e', 'East'),
         ('w', 'West')
-    )
-
-    direction = ChoiceVar(choices=CHOICES)
+    ))
 
 
     input_edrpou = StringVar(
@@ -116,6 +112,7 @@ class OrganizationOnboarding(Script):
         #Creating tenant 
         # Продумати час початку надання сервісу.
         # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
+
         tenant = Tenant.objects.create( name=short_name, slug=slug,   
          custom_field_data={  
                  'edrpou': edrpou,  
