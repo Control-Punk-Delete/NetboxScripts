@@ -9,14 +9,6 @@ from utilities.exceptions import AbortScript
     
 class OrganizationOnboarding(Script):
 
-    def __init__(self):  
-        super().__init__()  
-        try:  
-            choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
-            self.services_choices = choice_set.choices  
-        except CustomFieldChoiceSet.DoesNotExist:  
-            self.services_choices = []  
-            self.log_warning("Choice set 'services_choice_list' not found. No choices available.") 
 
     class Meta(Script.Meta):
         name = "Створення організації"
@@ -28,17 +20,24 @@ class OrganizationOnboarding(Script):
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
-    # Get the choice set and extract choices  
+    # Get the choice set and extract choices 
 
-    # Помилка якщо нема такого переліку. 
-    # choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list') 
-    # services_choices = choice_set.choices
+
+    @classmethod  
+    def get_services_choices(cls):  
+        """Get choices from the CustomFieldChoiceSet"""  
+        try:  
+            choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
+            return choice_set.choices  
+        except CustomFieldChoiceSet.DoesNotExist:  
+            return []
+
 
 
 
     input_services = MultiChoiceVar(
         label="Сервіси", 
-        choices=lambda self: self.services_choices,  
+        choices= get_services_choices(),  
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
