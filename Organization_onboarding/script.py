@@ -1,4 +1,6 @@
-from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar
+import csv
+
+from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, FileVar
 from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
@@ -6,6 +8,31 @@ from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
 from django.contrib.contenttypes.models import ContentType 
 from utilities.exceptions import AbortScript
+
+class BulkOrganizationImport(Script):
+    class Meta(Script.Meta):
+        name = "Додавання багатьох організацій"
+        description = "Метод стандартизованого додавання багатьох Тенантів."
+        scheduling_enabled = False
+
+    
+    csv_file = FileVar(  
+        label="Перелік організацій",  
+        description="Завантаж CSV з наступними колонками: name*, full_name*, edrpou*, zone*, services (Sensor, Endpoint, Vulnerability, MDR), edr_start_date (YYYY-MM-DD), edr_vendor (Crowdstrike, Cisco Secure Endpoint (AMP), Cisco Secure Endpoint (AMP Private Cloud), Elastic EDR)",  
+        required=False  
+    ) 
+    def run(self, data, commit):
+        if not data['csv_file']:
+            self.log_debug("No file privided, run single")
+            pass
+
+        file = data['csv_file']  
+        reader = csv.DictReader(file.read().decode('utf-8').splitlines())  
+        created = 0  
+        for row in reader:  
+            self.log_debug(f"{row}")
+            
+
     
 class OrganizationOnboarding(Script):
 
@@ -222,18 +249,5 @@ class OrganizationOnboarding(Script):
             raise AbortScript(f"Error during zone creation: {e}")
         
 
-        tenants = Tenant.objects.filter(name=short_name)
+script_order = (BulkOrganizationImport, OrganizationOnboarding)
         
-        output = [
-            'id,slug,name'
-        ]
-        for tenant in tenants:
-            self.log_debug(f'Created output file {tenant}')
-            attrs = [
-                tenant.id,
-                tenant.slug,
-                tenant.name
-            ]
-            output.append(','.join(attrs))
-
-        return '\n'.join(output)
