@@ -31,7 +31,7 @@ class OrganizationOnboarding(Script):
 
     input_services = MultiChoiceVar(
         label="Сервіси", 
-        choices= [['a','A'],['b','B']],
+        choices= (('val1', 'Lable1'),('val2', 'Lable2'),('val3','Lable3')),
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     )
