@@ -1,4 +1,4 @@
-from extras.scripts import Script, StringVar, MultiChoiceVar, ChoiceVar
+from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar
 from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
@@ -16,6 +16,11 @@ class OrganizationOnboarding(Script):
     except CustomFieldChoiceSet.DoesNotExist:  
         services_choices = []
 
+    try:
+        edr_vendor_choices = CustomFieldChoiceSet.objects.get(name="edr_vendor_choices_list").choices
+    except CustomFieldChoiceSet.DoesNotExist:
+        edr_vendor_choices = []
+
     # Define Meta Script
 
     class Meta(Script.Meta):
@@ -24,7 +29,7 @@ class OrganizationOnboarding(Script):
         scheduling_enabled = False
         fieldsets = (  
             ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('Інформація про сервіси та активи', ('input_services_list')),
+            ('Інформація про сервіси та активи', ('input_services_list', 'input_edr_service_start_date', 'input_edr_service_vendor')),
             ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
         commit_default = True
 
@@ -57,6 +62,21 @@ class OrganizationOnboarding(Script):
         required=False,
         )
 
+    input_edr_service_start_date = DateVar(
+        label="Дата початку надання сервісу EDR",
+        description="Дата початку надання сервісу EDR",
+        required=False
+    )
+
+    input_edr_service_vendor = MultiChoiceVar(
+        label="Вендор EDR",
+        description="Вендор продукту наданого в рамках сервісу EDR та визначеного edr_vendor_choices_list",
+        choices=edr_vendor_choices,
+        required=False,
+        )
+
+
+
     input_dns_zone = StringVar(
         label="Домен",
         description="Кореневий домен, в зоні якого розміщені ресурси організації. Використовується для створення ідентифікатору slug (тому повинен бути унікальний).",
@@ -88,6 +108,12 @@ class OrganizationOnboarding(Script):
         services = data['input_services_list']
         self.log_debug(f"Extracted services data: {services}")
 
+        edr_start_date = data['input_edr_service_start_date']
+        self.log_debug(f"Extracted edr start date data: {edr_start_date}")
+
+        edr_vendors = data['input_edr_service_vendor']
+        self.log_debug(f"Extracted edr vendor data: {edr_vendors}")
+
         edrpou = data['input_edrpou']  
         short_name = data['input_short_name']  
         full_name = data['input_full_name']
@@ -113,10 +139,13 @@ class OrganizationOnboarding(Script):
         # Creating tenant 
         # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
 
+
         tenant_custom_data = {  
                  'edrpou': edrpou,  
                  'full_name': full_name,
-                 'services': services
+                 'services': services,
+                 'edr_start_date': edr_start_date,
+                 'edr_vendor': edr_vendors
                  }
 
         tenant = Tenant.objects.create( name=short_name, slug=slug,   
