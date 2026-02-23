@@ -220,12 +220,17 @@ class OrganizationOnboarding(Script):
             
         except Exception as e:  
             raise AbortScript(f"Error during zone creation: {e}")
+        
+
+        tenants = Tenant.objects.filter(name=short_name)
+        
+        self.log_debug(tenants)
 
 # Generate a CSV table of new devices
         output = [
             'slug,name,full_name,edrpou,services,edr_vendors,edr_start_date'
         ]
-        for tenant in Tenant.objects.filter(name=short_name):
+        for tenant in tenants:
             attrs = [
                 tenant.slug,
                 tenant.name,
