@@ -9,6 +9,11 @@ from utilities.exceptions import AbortScript
     
 class OrganizationOnboarding(Script):
 
+    try:  
+        services_choices = CustomFieldChoiceSet.objects.get(name="services_choices_list").choices  
+    except CustomFieldChoiceSet.DoesNotExist:  
+        services_choices = []
+
 
     class Meta(Script.Meta):
         name = "Створення організації"
@@ -23,13 +28,7 @@ class OrganizationOnboarding(Script):
     # General Information 
     # Get the choice set and extract choices
 
-    try:  
-        services_choices = CustomFieldChoiceSet.objects.get(name="services_choices_list").choices  
-    except CustomFieldChoiceSet.DoesNotExist:  
-        services_choices = [] 
 
-    
-    input_services_list = {"label": "Сервіси"}
 
     input_services_list = MultiChoiceVar(
         label="Сервіси",
