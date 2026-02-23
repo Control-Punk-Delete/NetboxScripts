@@ -15,7 +15,6 @@ class OrganizationOnboarding(Script):
         scheduling_enabled = False
         fieldsets = (  
             ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('SOC Services', ('input_services')), 
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
@@ -28,7 +27,6 @@ class OrganizationOnboarding(Script):
     # Create multiselect field with those choices 
     input_services = MultiChoiceVar(  
         choices=services_choices,  
-        label="Сервіси",  
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
