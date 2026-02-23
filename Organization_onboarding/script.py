@@ -231,7 +231,8 @@ class OrganizationOnboarding(Script):
             self.log_debug(f'Created output file {tenant}')
             attrs = [
                 tenant.slug,
-                tenant.name
+                tenant.name,
+                tenant.custom_fields.full_name
             ]
             output.append(','.join(attrs))
 
