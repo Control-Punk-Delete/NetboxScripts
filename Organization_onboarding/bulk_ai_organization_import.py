@@ -40,7 +40,7 @@ class BulkOrganizationOnboarding(Script):
         self.log_info(f"Processed {created_tenants} tenants.")  
   
     def _process_row(self, row, commit):
-        self.log_debug(f"row")
+        self.log_debug(f"{row}")
         edrpou = row['edrpou'].strip()  
         short_name = row['short_name'].strip()  
         full_name = row['full_name'].strip()  
