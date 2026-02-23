@@ -14,6 +14,8 @@ class BulkOrganizationImport(Script):
         name = "Додавання багатьох організацій"
         description = "Метод стандартизованого додавання багатьох Тенантів."
         scheduling_enabled = False
+        fieldsets = ('Перелік організацій', ('csv_file'))
+
 
     
     csv_file = FileVar(  
