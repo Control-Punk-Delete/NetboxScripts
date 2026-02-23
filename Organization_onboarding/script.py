@@ -47,7 +47,7 @@ class OrganizationOnboarding(Script):
 
     input_full_name = StringVar(
         label="Повне найменування юридичної особи.",
-        description="Full name",  
+        description="Офіційна повне н",  
         required=True  
     )
 
@@ -79,9 +79,9 @@ class OrganizationOnboarding(Script):
     def run(self, data, commit):  
         # Access the form data
 
-        #selected_services = data['input_services']
-        self.log_debug(f"Extracted services data: {data['services']}")
-
+        
+        services = data['input_services']
+        self.log_debug(f"Extracted services data: {services}")
 
         edrpou = data['input_edrpou']  
         short_name = data['input_short_name']  
@@ -112,7 +112,8 @@ class OrganizationOnboarding(Script):
         tenant = Tenant.objects.create( name=short_name, slug=slug,   
          custom_field_data={  
                  'edrpou': edrpou,  
-                 'full_name': full_name
+                 'full_name': full_name,
+                 'services': services
                  }  
              )
         
