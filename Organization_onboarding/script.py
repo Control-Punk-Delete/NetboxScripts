@@ -15,22 +15,21 @@ class OrganizationOnboarding(Script):
         scheduling_enabled = False
         fieldsets = (  
             ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-            ('Services',('input_services')),
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
     # Get the choice set and extract choices  
 
     # Помилка якщо нема такого переліку. 
-    choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list') 
-    services_choices = choice_set.choices
+    # choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list') 
+    # services_choices = choice_set.choices
 
     # Create multiselect field with those choices 
-    input_services = MultiChoiceVar( 
-        choices=services_choices,  
-        description="Перелік сервісів, які надані для огранізації",
-        required=False  
-    ) 
+    # input_services = MultiChoiceVar( 
+    #    choices=services_choices,  
+    #    description="Перелік сервісів, які надані для огранізації",
+    #    required=False  
+    #) 
 
     input_edrpou = StringVar(
         label="Код ЄДРПОУ",
@@ -79,6 +78,13 @@ class OrganizationOnboarding(Script):
 
     def run(self, data, commit):  
         # Access the form data 
+
+        choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list')
+        self.log_debug(f"Choise set obj: {choice_set}")
+
+
+        services_choices = choice_set.choices
+        self.log_debug(f"Coises: {services_choices}")
 
         selected_services = data.get('input_services', []) 
         edrpou = data['input_edrpou']  
