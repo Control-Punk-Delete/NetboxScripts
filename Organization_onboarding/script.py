@@ -26,8 +26,19 @@ class OrganizationOnboarding(Script):
     # services_choices = choice_set.choices
 
     # Create multiselect field with those choices 
-    input_services = MultiChoiceVar( 
-        choices=CustomFieldChoiceSet.objects.get(name='services_choices_list').choices,  
+
+    try:
+        services = CustomFieldChoiceSet.objects.get(name='services_choices_list')
+        services_chises = services.choices
+    except Exception as e:
+        print(f"e")
+
+
+
+
+    input_services = MultiChoiceVar(
+        label="Сервіси", 
+        choices=(services_chises),  
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
