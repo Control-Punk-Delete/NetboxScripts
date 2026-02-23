@@ -1,4 +1,5 @@
-from extras.scripts import Script, StringVar
+from extras.scripts import Script, StringVar, MultiChoiceVar
+from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
 from netbox_dns.models import (NameServer, Zone)
@@ -13,10 +14,25 @@ class OrganizationOnboarding(Script):
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
         fieldsets = (  
-            ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),  
+            ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+            ('SOC Services', ('services')), 
             ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
-    # General Information  
+    # General Information 
+    # Get the choice set and extract choices  
+
+    # Помилка якщо нема такого переліку. 
+    choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list') 
+    services_choices = choice_set.choices
+
+    # Create multiselect field with those choices 
+    input_services = MultiChoiceVar(  
+        choices=services_choices,  
+        label='Services',  
+        description='Select services from the predefined list',
+        required=False  
+    ) 
+
     input_edrpou = StringVar(
         label="Код ЄДРПОУ",
         regex=r'^[0-9]{8}$',
@@ -63,7 +79,9 @@ class OrganizationOnboarding(Script):
 
 
     def run(self, data, commit):  
-        # Access the form data  
+        # Access the form data 
+
+        selected_services = data.get('input_services', []) 
         edrpou = data['input_edrpou']  
         short_name = data['input_short_name']  
         full_name = data['input_full_name']
@@ -87,11 +105,13 @@ class OrganizationOnboarding(Script):
         self.log_debug("Create a Tenant object")
 
         #Creating tenant 
+        # Продумати час початку надання сервісу.
         # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
         tenant = Tenant.objects.create( name=short_name, slug=slug,   
          custom_field_data={  
                  'edrpou': edrpou,  
-                 'full_name': full_name  
+                 'full_name': full_name,
+                 'services': selected_services  
                  }  
              )
         
