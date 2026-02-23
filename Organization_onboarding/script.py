@@ -23,8 +23,8 @@ class OrganizationOnboarding(Script):
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
         fieldsets = (  
-            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name')),
-            ('Інформація про сервіси та активи', ('input_dns_zone', 'input_services_list')),
+            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+            ('Інформація про сервіси та активи', ('input_services_list')),
             ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
         commit_default = True
 
