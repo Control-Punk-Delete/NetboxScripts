@@ -32,13 +32,15 @@ class OrganizationOnboarding(Script):
 
 
 
-
-    input_services = MultiChoiceVar(
-        label="Сервіси", 
-        choices= services_choices,
-        description="Перелік сервісів, які надані для огранізації",
-        required=False  
-    ) 
+    try:
+        input_services = MultiChoiceVar(
+            label="Сервіси", 
+            choices= services_choices,
+            description="Перелік сервісів, які надані для огранізації",
+            required=False  
+        )
+    except AttributeError as e:
+        pass
 
     input_edrpou = StringVar(
         label="Код ЄДРПОУ",
