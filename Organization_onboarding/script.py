@@ -21,8 +21,10 @@ class OrganizationOnboarding(Script):
 
     # General Information 
     # Get the choice set and extract choices 
+    services_list_obj = CustomFieldChoiceSet.objects.get(name="services_choice_list")
+    services_list = services_list_obj.choices
 
-    input_services = ChoiceVar(label="Сервіси", choices=CustomFieldChoiceSet.objects.get(name='services_choice_list').choices)
+    input_services = ChoiceVar(label="Сервіси", choices=services_list)
 
 
     input_edrpou = StringVar(
