@@ -82,9 +82,10 @@ class OrganizationOnboarding(Script):
         choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list')
         self.log_debug(f"Choise set obj: {choice_set}")
 
-
         services_choices = choice_set.choices
-        self.log_debug(f"Coises: {services_choices}")
+        list_services_choices = list(choice_set.choices)
+        
+        self.log_debug(f"Coises: {type(services_choices)},  after convert {type(list_services_choices)}")
 
         selected_services = data.get('input_services', []) 
         edrpou = data['input_edrpou']  
