@@ -28,6 +28,8 @@ class OrganizationOnboarding(Script):
     except CustomFieldChoiceSet.DoesNotExist:  
         services_choices = [] 
 
+    
+    input_services_list = {"label": "Сервіси"}
 
     input_services_list = MultiChoiceVar(
         label="Сервіси",
