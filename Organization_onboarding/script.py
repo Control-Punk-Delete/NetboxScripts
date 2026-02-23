@@ -75,8 +75,6 @@ class OrganizationOnboarding(Script):
         required=False,
         )
 
-
-
     input_dns_zone = StringVar(
         label="Домен",
         description="Кореневий домен, в зоні якого розміщені ресурси організації. Використовується для створення ідентифікатору slug (тому повинен бути унікальний).",
@@ -86,7 +84,7 @@ class OrganizationOnboarding(Script):
     input_contact_name = StringVar(
         label="П.І.Б",
         description="Прізвище Імʼя По батькові контактної особи.",
-        required=True
+        required=False
     )
 
     input_contact_phone = StringVar(
