@@ -1,4 +1,4 @@
-from extras.scripts import Script, StringVar, MultiChoiceVar
+from extras.scripts import Script, StringVar, MultiChoiceVar, ChoiceVar
 from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
@@ -27,11 +27,18 @@ class OrganizationOnboarding(Script):
     #try:  
     #    choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
     #    services_choices = choice_set.choices  
-    #except CustomFieldChoiceSet.DoesNotExist:  
+    #except CustomFieldChoiceSet.DoesNotExist:
+    
+    CHOICES = (
+    ('n', 'North'),
+    ('s', 'South'),
+    ('e', 'East'),
+    ('w', 'West')
+)
 
     input_services = MultiChoiceVar(
         label="Сервіси", 
-        choices= (('val1', 'Lable1'),('val2', 'Lable2'),('val3','Lable3')),
+        choices=ChoiceVar(choices=CHOICES),
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     )
