@@ -14,21 +14,23 @@ class BulkOrganizationImport(Script):
         name = "Додавання багатьох організацій"
         description = "Метод стандартизованого додавання багатьох Тенантів."
         scheduling_enabled = False
-        fieldsets = ('Перелік організацій', ('csv_file'))
+        #fieldsets = ('Перелік організацій', ('input_csv_file'))
 
 
     
-    csv_file = FileVar(  
+    input_csv_file = FileVar(  
         label="Перелік організацій",  
         description="Завантаж CSV з наступними колонками: name*, full_name*, edrpou*, zone*, services (Sensor, Endpoint, Vulnerability, MDR), edr_start_date (YYYY-MM-DD), edr_vendor (Crowdstrike, Cisco Secure Endpoint (AMP), Cisco Secure Endpoint (AMP Private Cloud), Elastic EDR)",  
         required=False  
     ) 
+
     def run(self, data, commit):
-        if not data['csv_file']:
+
+        if not data['input_csv_file']:
             self.log_debug("No file privided, run single")
             pass
 
-        file = data['csv_file']  
+        file = data['input_csv_file']  
         reader = csv.DictReader(file.read().decode('utf-8').splitlines())  
         created = 0  
         for row in reader:  
