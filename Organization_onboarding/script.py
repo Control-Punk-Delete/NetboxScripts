@@ -28,8 +28,8 @@ class OrganizationOnboarding(Script):
     # Create multiselect field with those choices 
     input_services = MultiChoiceVar(  
         choices=services_choices,  
-        label='Services',  
-        description='Select services from the predefined list',
+        label="Services",  
+        description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
 
