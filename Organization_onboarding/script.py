@@ -9,12 +9,15 @@ from utilities.exceptions import AbortScript
     
 class OrganizationOnboarding(Script):
 
+    # Get services custom choice set
+
     try:  
         services_choices = CustomFieldChoiceSet.objects.get(name="services_choices_list").choices  
     except CustomFieldChoiceSet.DoesNotExist:  
         services_choices = []
 
-
+    # Define Meta Script
+    
     class Meta(Script.Meta):
         name = "Створення організації"
         description = "Метод стандартизованого додавання нового Тенанту."
@@ -26,17 +29,6 @@ class OrganizationOnboarding(Script):
             )
 
     # General Information 
-    # Get the choice set and extract choices
-
-
-
-    input_services_list = MultiChoiceVar(
-        label="Сервіси",
-        description="Перелік сервісів визначений в services_choices_list, які надаються організації.",
-        choices=services_choices,
-        required=False,
-        )
-
 
     input_edrpou = StringVar(
         label="Код ЄДРПОУ",
@@ -57,6 +49,13 @@ class OrganizationOnboarding(Script):
         description="Офіційна повна назва юридичної особи.",  
         required=True  
     )
+
+    input_services_list = MultiChoiceVar(
+        label="Сервіси",
+        description="Перелік сервісів визначений в services_choices_list, які надаються організації.",
+        choices=services_choices,
+        required=False,
+        )
 
     input_dns_zone = StringVar(
         label="Домен",
