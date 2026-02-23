@@ -14,16 +14,17 @@ class OrganizationOnboarding(Script):
         name = "Створення організації"
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
-        #fieldsets = (  
-        #    ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-        #    ('Інформація про сервіси', ('input_services')),
-        #    ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
+        fieldsets = (  
+            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+            ('Інформація про сервіси', ('input_services_list')),
+            ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone'))
+            )
 
     # General Information 
     # Get the choice set and extract choices 
 
 
-    input_services = MultiChoiceVar(
+    input_services_list = MultiChoiceVar(
         label="Сервіси",
         description="Перелік сервісів визначений в services_choices_list, які надаються організації.",
         choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices,
@@ -47,7 +48,7 @@ class OrganizationOnboarding(Script):
 
     input_full_name = StringVar(
         label="Повне найменування юридичної особи.",
-        description="Офіційна повне н",  
+        description="Офіційна повна назва юридичної особи.",  
         required=True  
     )
 
@@ -76,11 +77,10 @@ class OrganizationOnboarding(Script):
     )
 
 
-    def run(self, data, commit):  
-        # Access the form data
+    def run(self, data, commit):
 
-        
-        services = data['input_services']
+        # Access the form data
+        services = data['input_services_list']
         self.log_debug(f"Extracted services data: {services}")
 
         edrpou = data['input_edrpou']  
@@ -105,16 +105,17 @@ class OrganizationOnboarding(Script):
         
         self.log_debug("Create a Tenant object")
 
-        #Creating tenant 
-        # Продумати час початку надання сервісу.
+        # Creating tenant 
         # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
 
-        tenant = Tenant.objects.create( name=short_name, slug=slug,   
-         custom_field_data={  
+        tenant_custom_data = {  
                  'edrpou': edrpou,  
                  'full_name': full_name,
                  'services': services
-                 }  
+                 }
+
+        tenant = Tenant.objects.create( name=short_name, slug=slug,   
+         custom_field_data=tenant_custom_data
              )
         
         tenant.save()
@@ -192,3 +193,4 @@ class OrganizationOnboarding(Script):
             
         except Exception as e:  
             raise AbortScript(f"Error during zone creation: {e}")
+        
