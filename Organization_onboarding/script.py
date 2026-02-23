@@ -10,20 +10,20 @@ from utilities.exceptions import AbortScript
 class OrganizationOnboarding(Script):
 
 
-    #class Meta(Script.Meta):
-    #    name = "Створення організації"
-    #    description = "Метод стандартизованого додавання нового Тенанту."
-    #    scheduling_enabled = False
-    #    fieldsets = (  
-    #        ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
-    #        ('Services',('direction')),
-    #        ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
+    class Meta(Script.Meta):
+        name = "Створення організації"
+        description = "Метод стандартизованого додавання нового Тенанту."
+        scheduling_enabled = False
+        fieldsets = (  
+            ('Organization Details', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+            ('Services',('input_services')),
+            ('Contact Information', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
 
     # General Information 
     # Get the choice set and extract choices 
 
 
-    input_services = ChoiceVar(label="Сервіси", choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices)
+    input_services = MultiChoiceVar(label="Сервіси", choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices)
 
 
     input_edrpou = StringVar(
