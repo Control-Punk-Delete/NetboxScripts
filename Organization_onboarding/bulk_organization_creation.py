@@ -30,9 +30,10 @@ class BulkOrganizationImport(Script):
         if not data['input_csv_file']:
             self.log_debug("No file privided, run single")
             pass
+        else:
 
-        file = data['input_csv_file']  
-        reader = csv.DictReader(file.read().decode('utf-8').splitlines())  
-        created = 0  
-        for row in reader:  
-            self.log_debug(f"{row}")
+            file = data['input_csv_file']  
+            reader = csv.DictReader(file.read().decode('utf-8').splitlines())  
+            created = 0  
+            for row in reader:  
+                self.log_debug(f"{row}")
