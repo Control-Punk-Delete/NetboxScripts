@@ -225,18 +225,14 @@ class OrganizationOnboarding(Script):
         tenants = Tenant.objects.filter(name=short_name)
         
         output = [
-            'slug,name,full_name,edrpou,services,edr_vendors,edr_start_date'
+            'slug,name'
         ]
         for tenant in tenants:
             self.log_debug(f'Created output file {tenant.keys()}')
             attrs = [
                 tenant.slug,
-                tenant.name,
-                tenant.cf.full_name,
-                tenant.cf.edrpou,
-                tenant.cf.services,
-                tenant.cf.edr_vendors,
-                tenant.cf.edr_start_date,
+                tenant.name
+
             ]
             output.append(','.join(attrs))
 
