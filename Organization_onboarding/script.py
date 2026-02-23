@@ -232,7 +232,7 @@ class OrganizationOnboarding(Script):
             attrs = [
                 tenant.slug,
                 tenant.name,
-                tenant.custom_fields.full_name
+                tenant.cf_full_name
             ]
             output.append(','.join(attrs))
 
