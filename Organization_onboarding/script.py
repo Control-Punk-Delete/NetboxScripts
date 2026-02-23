@@ -224,13 +224,11 @@ class OrganizationOnboarding(Script):
 
         tenants = Tenant.objects.filter(name=short_name)
         
-        self.log_debug(tenants)
-
-# Generate a CSV table of new devices
         output = [
             'slug,name,full_name,edrpou,services,edr_vendors,edr_start_date'
         ]
         for tenant in tenants:
+            self.log_debug(f'Created output file {tenant}')
             attrs = [
                 tenant.slug,
                 tenant.name,
