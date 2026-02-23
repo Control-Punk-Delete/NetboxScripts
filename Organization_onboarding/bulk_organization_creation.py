@@ -25,6 +25,7 @@ class BulkOrganizationImport(Script):
     ) 
 
     def run(self, data, commit):
+        self.log_debug(f"{data}")
 
         if not data['input_csv_file']:
             self.log_debug("No file privided, run single")
