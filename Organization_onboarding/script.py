@@ -9,6 +9,15 @@ from utilities.exceptions import AbortScript
     
 class OrganizationOnboarding(Script):
 
+    def __init__(self):  
+        super().__init__()  
+        try:  
+            choice_set = CustomFieldChoiceSet.objects.get(name='services_choice_list')  
+            self.services_choices = choice_set.choices  
+        except CustomFieldChoiceSet.DoesNotExist:  
+            self.services_choices = []  
+            self.log_warning("Choice set 'services_choice_list' not found. No choices available.") 
+
     class Meta(Script.Meta):
         name = "Створення організації"
         description = "Метод стандартизованого додавання нового Тенанту."
@@ -25,20 +34,11 @@ class OrganizationOnboarding(Script):
     # choice_set = CustomFieldChoiceSet.objects.get(name='services_choices_list') 
     # services_choices = choice_set.choices
 
-    # Create multiselect field with those choices 
-
-    try:
-        services = CustomFieldChoiceSet.objects.get(name='services_choices_list')
-        services_chises = services.choices
-    except Exception as e:
-        print(f"e")
-
-
 
 
     input_services = MultiChoiceVar(
         label="Сервіси", 
-        choices=(services_chises),  
+        choices=lambda self: self.services_choices,  
         description="Перелік сервісів, які надані для огранізації",
         required=False  
     ) 
