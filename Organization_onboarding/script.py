@@ -25,7 +25,10 @@ class OrganizationOnboarding(Script):
 
     input_services = MultiChoiceVar(
         label="Сервіси",
-        choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices)
+        description="Перелік сервісів визначений в services_choices_list, які надаються організації.",
+        choices=CustomFieldChoiceSet.objects.get(name="services_choices_list").choices,
+        required=False,
+        )
 
 
     input_edrpou = StringVar(
