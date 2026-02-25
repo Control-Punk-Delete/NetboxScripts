@@ -2,7 +2,8 @@ import csv
 
 from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, ChoiceVar, ObjectVar
 from extras.models import CustomFieldChoiceSet
-from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole, Regions
+from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
+from dcim.models import Regions
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
@@ -121,6 +122,8 @@ class OrganizationOnboarding(Script):
         required=False
     )
 
+    #input_contact_title = 
+
     input_contact_phone = StringVar(
         label="Телефон",
         description="Контактний номер телефону.",
@@ -186,7 +189,7 @@ class OrganizationOnboarding(Script):
                  'sub_sector': sub_sector,
 
                  'services': services,
-                 
+
                  'edr_start_date': edr_start_date,
                  'edr_vendor': edr_vendors,
 
