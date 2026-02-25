@@ -44,7 +44,7 @@ class OrganizationOnboarding(Script):
         fieldsets = (  
             ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_region', 'input_sector', 'input_sub_sector', 'input_dns_zone')),
             ('Інформація про сервіси та активи', ('input_services_list', 'input_edr_service_start_date', 'input_edr_service_vendor')),
-            ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone', 'input_contact_title')))
+            ('Інформація про контактну особу', ('input_contact_name', 'input_contact_email', 'input_contact_phone', 'input_contact_title')))
         commit_default = True
 
     # General Information 
