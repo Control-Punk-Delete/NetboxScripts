@@ -1,8 +1,8 @@
 import csv
 
-from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, ChoiceVar
+from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, ChoiceVar, ObjectVar
 from extras.models import CustomFieldChoiceSet
-from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
+from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole, Regions
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
@@ -89,11 +89,12 @@ class OrganizationOnboarding(Script):
         required=False,
         )
 
-    #input_region = ObjectVar(
-    #    label="Регіон",
-    #    description="",
-    #    required=False
-    #)
+    input_region = ObjectVar(
+        label="Регіон",
+        description="Область України",
+        required=False,
+        model=Regions
+    )
 
     input_edr_service_start_date = DateVar(
         label="Дата початку надання сервісу EDR",
@@ -160,6 +161,8 @@ class OrganizationOnboarding(Script):
         sector = data['input_sector']
         sub_sector = data['input_sub_sector']
 
+        region = data['input_region']
+
 
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
@@ -178,13 +181,15 @@ class OrganizationOnboarding(Script):
         tenant_custom_data = {  
                  'edrpou': edrpou,  
                  'full_name': full_name,
-
+                 'region': region,
                  'sector': sector,
                  'sub_sector': sub_sector,
 
                  'services': services,
+                 
                  'edr_start_date': edr_start_date,
                  'edr_vendor': edr_vendors,
+
                  'contact_email': contact_email,
                  'contact_name': contact_name
                  
