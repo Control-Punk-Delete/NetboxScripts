@@ -194,7 +194,7 @@ class OrganizationOnboarding(Script):
                  'full_name': full_name,
                  'sector': sector,
                  'sub_sector': sub_sector,
-
+                 'region': None,
                  'services': services,
 
                  'edr_start_date': edr_start_date,
@@ -208,8 +208,13 @@ class OrganizationOnboarding(Script):
         tenant = Tenant.objects.create( name=short_name, slug=slug, description=full_name,  
          custom_field_data=tenant_custom_data
              )
-        tenant.cf.region = region
-        tenant.save()
+        
+        self.log_debug(f"Try add region to tenant")
+        
+        tenant.cf['region'] = region
+        
+        if commit:
+            tenant.save()
         self.log_success(f"Createed Tenant: {tenant}")
 
         # Creating Contact Group
