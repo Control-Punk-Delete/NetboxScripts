@@ -42,9 +42,9 @@ class OrganizationOnboarding(Script):
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
         fieldsets = (  
-            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_sector', 'input_sub_sector','input_dns_zone')),
+            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_region', 'input_sector', 'input_sub_sector', 'input_dns_zone')),
             ('Інформація про сервіси та активи', ('input_services_list', 'input_edr_service_start_date', 'input_edr_service_vendor')),
-            ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
+            ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone', 'input_contact_title')))
         commit_default = True
 
     # General Information 
@@ -136,6 +136,12 @@ class OrganizationOnboarding(Script):
         required=False
     )
 
+    input_contact_title = StringVar(
+        label="Посада",
+        description="Посада, яку займає особа в організації",
+        required=False
+    )
+
 
     def run(self, data, commit):
 
@@ -160,6 +166,7 @@ class OrganizationOnboarding(Script):
         contact_name = data['input_contact_name']
         contact_phone = data['input_contact_phone']
         contact_email = data['input_contact_email']
+        contact_title = data['input_contact_title']
 
         sector = data['input_sector']
         sub_sector = data['input_sub_sector']
@@ -221,7 +228,8 @@ class OrganizationOnboarding(Script):
         try:
             contact = Contact.objects.create( name=contact_name,
                                               phone=contact_phone,
-                                              email=contact_email
+                                              email=contact_email,
+                                              description=contact_title
                                             )
             
             contact.groups.add(contact_group)
