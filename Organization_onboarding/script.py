@@ -1,6 +1,6 @@
 import csv
 
-from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar
+from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, ChoiceVar
 from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
 
@@ -14,14 +14,25 @@ class OrganizationOnboarding(Script):
     # Get services custom choice set
 
     try:  
-        services_choices = CustomFieldChoiceSet.objects.get(name="services_choices_list").choices  
+        services_choices = CustomFieldChoiceSet.objects.get(name="services_choices").choices  
     except CustomFieldChoiceSet.DoesNotExist:  
         services_choices = []
 
     try:
-        edr_vendor_choices = CustomFieldChoiceSet.objects.get(name="edr_vendor_choices_list").choices
+        edr_vendor_choices = CustomFieldChoiceSet.objects.get(name="edr_vendor_choices").choices
     except CustomFieldChoiceSet.DoesNotExist:
         edr_vendor_choices = []
+
+
+    try:  
+        sector_choices = CustomFieldChoiceSet.objects.get(name="sector_choices").choices  
+    except CustomFieldChoiceSet.DoesNotExist:  
+        sector_choices = []
+
+    try:  
+        sub_sector_choices = CustomFieldChoiceSet.objects.get(name="sub_sector_choices").choices  
+    except CustomFieldChoiceSet.DoesNotExist:  
+        sub_sector_choices = []
 
     # Define Meta Script
 
@@ -30,7 +41,7 @@ class OrganizationOnboarding(Script):
         description = "Метод стандартизованого додавання нового Тенанту."
         scheduling_enabled = False
         fieldsets = (  
-            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_dns_zone')),
+            ('Загальна інформація про організацію', ('input_edrpou', 'input_short_name', 'input_full_name', 'input_sector', 'input_sub_sector','input_dns_zone')),
             ('Інформація про сервіси та активи', ('input_services_list', 'input_edr_service_start_date', 'input_edr_service_vendor')),
             ('Інформація про контактних осіб', ('input_contact_name', 'input_contact_email', 'input_contact_phone')))
         commit_default = True
@@ -63,6 +74,26 @@ class OrganizationOnboarding(Script):
         choices=services_choices,
         required=False,
         )
+
+    input_sector = ChoiceVar(
+        label="Сектор",
+        description="Галузева приналежність до сектору",
+        choices=sector_choices,
+        required=False,
+        )
+
+    input_sub_sector = ChoiceVar(
+        label="Під сектор",
+        description="Галузева приналежність до під сектору",
+        choices=sub_sector_choices,
+        required=False,
+        )
+
+    #input_region = ObjectVar(
+    #    label="Регіон",
+    #    description="",
+    #    required=False
+    #)
 
     input_edr_service_start_date = DateVar(
         label="Дата початку надання сервісу EDR",
@@ -126,6 +157,10 @@ class OrganizationOnboarding(Script):
         contact_phone = data['input_contact_phone']
         contact_email = data['input_contact_email']
 
+        sector = data['input_sector']
+        sub_sector = data['input_sub_sector']
+
+
 
         self.log_debug(f"{edrpou} - {short_name} - {full_name}")
 
@@ -143,12 +178,19 @@ class OrganizationOnboarding(Script):
         tenant_custom_data = {  
                  'edrpou': edrpou,  
                  'full_name': full_name,
+
+                 'sector': sector,
+                 'sub_sector': sub_sector,
+
                  'services': services,
                  'edr_start_date': edr_start_date,
-                 'edr_vendor': edr_vendors
+                 'edr_vendor': edr_vendors,
+                 'contact_email': contact_email,
+                 'contact_name': contact_name
+                 
                  }
 
-        tenant = Tenant.objects.create( name=short_name, slug=slug,   
+        tenant = Tenant.objects.create( name=short_name, slug=slug, description=full_name,  
          custom_field_data=tenant_custom_data
              )
         
