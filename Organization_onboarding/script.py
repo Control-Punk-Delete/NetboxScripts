@@ -168,10 +168,13 @@ class OrganizationOnboarding(Script):
         contact_email = data['input_contact_email']
         contact_title = data['input_contact_title']
 
+
         sector = data['input_sector']
         sub_sector = data['input_sub_sector']
+        self.log_debug(f"Get sector {sector}, subsector {sub_sector}")
 
         region = data['input_region']
+        self.log_debug(f"Get region input data {region}")
 
 
 
