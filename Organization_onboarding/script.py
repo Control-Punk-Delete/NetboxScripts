@@ -194,7 +194,7 @@ class OrganizationOnboarding(Script):
                  'full_name': full_name,
                  'sector': sector,
                  'sub_sector': sub_sector,
-                 'region': None,
+
                  'services': services,
 
                  'edr_start_date': edr_start_date,
