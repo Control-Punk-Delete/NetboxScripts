@@ -196,7 +196,7 @@ class OrganizationOnboarding(Script):
                  'sub_sector': sub_sector,
 
                  'services': services,
-
+                 'region': region,
                  'edr_start_date': edr_start_date,
                  'edr_vendor': edr_vendors,
 
@@ -211,7 +211,7 @@ class OrganizationOnboarding(Script):
         
         self.log_debug(f"Try add region to tenant")
         
-        tenant.cf['region'] = region
+        #tenant.cf['region'] = region
         
         if commit:
             tenant.save()
