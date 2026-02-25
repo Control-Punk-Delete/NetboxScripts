@@ -122,8 +122,6 @@ class OrganizationOnboarding(Script):
         required=False
     )
 
-    #input_contact_title = 
-
     input_contact_phone = StringVar(
         label="Телефон",
         description="Контактний номер телефону.",
@@ -171,10 +169,10 @@ class OrganizationOnboarding(Script):
 
         sector = data['input_sector']
         sub_sector = data['input_sub_sector']
-        self.log_debug(f"Get sector {sector}, subsector {sub_sector}")
+        self.log_debug(f"Extracted sector {sector}, subsector {sub_sector}")
 
         region = data['input_region']
-        self.log_debug(f"Get region input data {region}")
+        self.log_debug(f"Extracted region input data {region}")
 
 
 
@@ -194,7 +192,6 @@ class OrganizationOnboarding(Script):
         tenant_custom_data = {  
                  'edrpou': edrpou,  
                  'full_name': full_name,
-                 'region': region,
                  'sector': sector,
                  'sub_sector': sub_sector,
 
@@ -211,7 +208,7 @@ class OrganizationOnboarding(Script):
         tenant = Tenant.objects.create( name=short_name, slug=slug, description=full_name,  
          custom_field_data=tenant_custom_data
              )
-        
+        tenant.cf.region = region
         tenant.save()
         self.log_success(f"Createed Tenant: {tenant}")
 
