@@ -143,51 +143,59 @@ class OrganizationOnboarding(Script):
 
     def run(self, data, commit):
 
-        # Access the form data
         services = data['input_services_list']
-        self.log_debug(f"Extracted services data: {services}")
+        self.log_debug(f"Extracted input_services_list: {services}" (type(services)))
 
         edr_start_date = str(data['input_edr_service_start_date'])
-        self.log_debug(f"Extracted edr start date data: {edr_start_date}")
+        self.log_debug(f"Extracted input_edr_service_start_date: {edr_start_date} (type(edr_start_date))")
 
         edr_vendors = data['input_edr_service_vendor']
-        self.log_debug(f"Extracted edr vendor data: {edr_vendors}")
+        self.log_debug(f"Extracted input_edr_service_vendor: {edr_vendors} (type(edr_vendors))")
 
-        edrpou = data['input_edrpou']  
-        short_name = data['input_short_name']  
+        edrpou = data['input_edrpou']
+        self.log_debug(f"Extracted input_edrpou: {edrpou} (type(edrpou))")
+
+        short_name = data['input_short_name']
+        self.log_debug(f"Extracted input_short_name: {short_name} (type(short_name))")
+
         full_name = data['input_full_name']
+        self.log_debug(f"Extracted input_full_name: {full_name} (type(full_name))")
 
         domain_zone = data['input_dns_zone']
-        slug = domain_zone.split(".")[0]
+        self.log_debug(f"Extracted input_dns_zone: {domain_zone} (type(domain_zone))")
 
+        slug = domain_zone.split(".")[0]
+        self.log_debug(f"Generate a slug: {slug} (type(slug))")
 
         contact_name = data['input_contact_name']
-        contact_phone = data['input_contact_phone']
-        contact_email = data['input_contact_email']
-        contact_title = data['input_contact_title']
+        self.log_debug(f"Extracted edr start date data: {contact_name} (type(contact_name))")
 
+        contact_phone = data['input_contact_phone']
+        self.log_debug(f"Extracted edr start date data: {contact_phone} (type(contact_phone))")
+
+        contact_email = data['input_contact_email']
+        self.log_debug(f"Extracted edr start date data: {contact_email} (type(contact_email))")
+
+        contact_title = data['input_contact_title']
+        self.log_debug(f"Extracted edr start date data: {contact_title} (type(contact_title))")
 
         sector = data['input_sector']
+        self.log_debug(f"Extracted input_sector: {sector}" (type(sector)))
+
         sub_sector = data['input_sub_sector']
-        self.log_debug(f"Extracted sector {sector}, subsector {sub_sector}")
+        self.log_debug(f"Extracted input_sub_sector {sub_sector} (type(sub_sector))")
 
-        region = data['input_region']
-        self.log_debug(f"Extracted region input data {region}")
+        region = str(data['input_region'])
+        self.log_debug(f"Extracted input_region: {region} ({type(region)})")
 
-
-
-        self.log_debug(f"{edrpou} - {short_name} - {full_name}")
+        self.log_infi(f"Extracted all data is done!")
 
 
         # Check is Tenant with uniq identificator is not already exist
         if Tenant.objects.filter(custom_field_data__edrpou=edrpou).exists():
-            raise AbortScript(f"Tenant with edrpou { edrpou } alredy exist.")
+            raise AbortScript(f"Tenant alredy exist with same edrpou")
         
-        self.log_debug("Create a Tenant object")
-
-        # Creating tenant 
-        # slug=slugify(short_name.replace(" ", "-"), allow_unicode=True), -cant use need domain
-
+        self.log_debug("Start Tenant object creation")
 
         tenant_custom_data = {  
                  'edrpou': edrpou,  
