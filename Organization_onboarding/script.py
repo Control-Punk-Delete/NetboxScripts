@@ -144,7 +144,7 @@ class OrganizationOnboarding(Script):
     def run(self, data, commit):
 
         services = data['input_services_list']
-        self.log_debug(f"Extracted input_services_list: {services}" (type(services)))
+        self.log_debug(f"Extracted input_services_list: {services} (type(services))")
 
         edr_start_date = str(data['input_edr_service_start_date'])
         self.log_debug(f"Extracted input_edr_service_start_date: {edr_start_date} (type(edr_start_date))")
@@ -180,7 +180,7 @@ class OrganizationOnboarding(Script):
         self.log_debug(f"Extracted edr start date data: {contact_title} (type(contact_title))")
 
         sector = data['input_sector']
-        self.log_debug(f"Extracted input_sector: {sector}" (type(sector)))
+        self.log_debug(f"Extracted input_sector: {sector} (type(sector))")
 
         sub_sector = data['input_sub_sector']
         self.log_debug(f"Extracted input_sub_sector {sub_sector} (type(sub_sector))")
