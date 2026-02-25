@@ -185,10 +185,10 @@ class OrganizationOnboarding(Script):
         sub_sector = data['input_sub_sector']
         self.log_debug(f"Extracted input_sub_sector {sub_sector} (type(sub_sector))")
 
-        region = data['input_region']
-        self.log_debug(f"Extracted input_region: {region} ({type(region)})")
+        region = str(data['input_region'])
+        self.log_debug(f"Extracted input_region {region} (type(region))")
 
-        self.log_infi(f"Extracted all data is done!")
+        self.log_info(f"Extracted all data is done!")
 
 
         # Check is Tenant with uniq identificator is not already exist
