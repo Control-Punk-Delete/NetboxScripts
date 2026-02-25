@@ -3,7 +3,7 @@ import csv
 from extras.scripts import Script, StringVar, MultiChoiceVar, DateVar, ChoiceVar, ObjectVar
 from extras.models import CustomFieldChoiceSet
 from tenancy.models import Tenant, ContactGroup, Contact, ContactAssignment, ContactRole
-from dcim.models import Regions
+from dcim.models import Region
 
 from netbox_dns.models import (NameServer, Zone)
 from netbox_dns.choices import (ZoneStatusChoices)
@@ -94,7 +94,7 @@ class OrganizationOnboarding(Script):
         label="Регіон",
         description="Область України",
         required=False,
-        model=Regions
+        model=Region
     )
 
     input_edr_service_start_date = DateVar(
