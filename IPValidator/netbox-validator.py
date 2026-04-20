@@ -8,7 +8,7 @@ from ipam.models import IPAddress, IPRange, Prefix
 class IPAddressValidator(Script):
     ip_str = StringVar()
 
-    def get_aws_prefixes(self, ip_type: int = 4, raw_file_path = "IPValidator/raw/akamai_raw_data"):
+    def get_aws_prefixes(self, ip_type: int = 4, raw_file_path = "akamai_raw_data"):
         with open(raw_file_path, "r") as file:
             data = json.load(file)
             file.close()
