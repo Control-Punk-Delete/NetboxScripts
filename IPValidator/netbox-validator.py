@@ -8,7 +8,7 @@ from ipam.models import IPAddress, IPRange, Prefix
 class IPAddressValidator(Script):
     ip_str = StringVar()
 
-    def get_aws_prefixes(ip_type: int = 4, raw_file_path = "raw/aws_raw_data"):
+    def get_aws_prefixes(self, ip_type: int = 4, raw_file_path = "raw/aws_raw_data"):
         with open(raw_file_path, "r") as file:
             data = json.load(file)
             file.close()
@@ -20,7 +20,7 @@ class IPAddressValidator(Script):
             return data.get("ipv6_prefixes")
 
         else:
-            raise "Wrong ip_type error"
+            raise AbortScript("Wrong ip_type error")
 
     def check_ipv4_is_aws(self, ip_str: str = "0.0.0.0"):
         ip = ipaddress.IPv4Address(ip_str)
@@ -62,7 +62,7 @@ class IPAddressValidator(Script):
 
         if ip_family == 4:
             self.log_debug("IPv4 Verification started")
-            self.log_info(self.check_ipv4_is_aws(ip_str))
+            self.log_info(self.check_ipv4_is_aws(ip_str = ip_str))
 
         elif ip_family == 6:
             self.log_debug("IPv6 Verification started")
