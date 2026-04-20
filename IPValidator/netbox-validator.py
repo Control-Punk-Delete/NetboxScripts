@@ -62,7 +62,13 @@ class IPAddressValidator(Script):
 
         if ip_family == 4:
             self.log_debug("IPv4 Verification started")
-            self.log_info(self.check_ipv4_is_aws(ip_str = ip_str))
+            if self.check_ipv4_is_aws(ip_str = ip_str):
+                self.log_debug(f"{ip_str} - AWS Network detected")
+                tags.append("cdn")
+                tags.append("cloud")
+                self.log_success(f"{tags}")
+            else:
+                self.log_success(f"{ip_str} - Validation passed")
 
         elif ip_family == 6:
             self.log_debug("IPv6 Verification started")
