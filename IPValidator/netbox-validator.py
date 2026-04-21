@@ -279,6 +279,43 @@ class IPAddressValidator(Script):
         
         else:
             raise "Unexpected ip_type"
+    
+    def verificate(self, ip_str, ip_family):
+        self.log_debug(f"Validation of IPv{ip_family}: {ip_str} started")
+
+        TAGS = []
+
+        if ip_family == 4:
+            ip = ipaddress.IPv4Address(ip_str)
+
+        elif ip_family == 6:
+            ip = ipaddress.IPv6Address(ip_str)
+        else:
+            raise AbortScript(f"Unknown IP Family {ip_family}")
+        
+
+        if ip.is_global:
+            TAGS.append('public')
+            if self.is_akamai(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cdn', 'akamai'])
+            if self.is_aws(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'aws'])
+            if self.is_azure(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'azure'])
+            if self.is_cloudflare(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cdn', 'cloudflare'])
+            if self.is_google(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'google'])
+            if self.is_google_cloud(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'google-cloud'])
+            if self.is_ms365(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'ms365'])
+
+            
+        if ip.is_private:
+            TAGS.append('private')
+            if ip.is_link_local: TAGS.append('link-local')
+            if ip.is_loopback: TAGS.append('loopback')
+        
+        if ip.is_multicast: TAGS.append('multicast')
+        if ip.is_reserved: TAGS.append('reserved')
+        if ip.is_unspecified: TAGS.append('unspecified')
+
+        return TAGS
+
 
 
     def run(self, data, commit):
@@ -307,45 +344,10 @@ class IPAddressValidator(Script):
         ip_family = data.get('family').get('value')
         
         self.log_debug(f"{input_type} input object. IP Address string:{ip_str}, IP type: {ip_family}")
-
-        
-        TAGS = []
-
-        if ip_family == 4:
-            ip = ipaddress.IPv4Address(ip_str)
-
-        elif ip_family == 6:
-            ip = ipaddress.IPv6Address(ip_str)
-        else:
-            raise AbortScript(f"Unknown IP Family {ip_family}")
-        
-
-
-        if ip.is_global:
-            TAGS.append('public')
-            if self.is_akamai(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cdn', 'akamai'])
-            if self.is_aws(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'aws'])
-            if self.is_azure(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'azure'])
-            if self.is_cloudflare(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cdn', 'cloudflare'])
-            if self.is_google(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'google'])
-            if self.is_google_cloud(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'google-cloud'])
-            if self.is_ms365(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'ms365'])
-
-            
-        if ip.is_private:
-            TAGS.append('private')
-            if ip.is_link_local: TAGS.append('link-local')
-            if ip.is_loopback: TAGS.append('loopback')
-        
-        if ip.is_multicast: TAGS.append('multicast')
-        if ip.is_reserved: TAGS.append('reserved')
-        if ip.is_unspecified: TAGS.append('unspecified')
-
-        self.log_success(TAGS)
+        TAGS = self.verificate(ip_str=ip_str, ip_family=ip_family)
 
         for tag in set(TAGS):
             ip_obj.tags.add(tag)
 
         ip_obj.save()
-
-        self.log_success("Done")
+        self.log_success(f"Verefication of object {input_type} ({ip_str}) is done next tags was added: {TAGS}")
