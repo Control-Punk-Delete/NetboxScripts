@@ -241,7 +241,7 @@ class IPAddressValidator(Script):
 
 
     # Akamai
-    def get_akamai_prefixes(self, ip_type: int = 4, raw_filev4_path = "akamai_raw_data", raw_filev6_path = "./netbox/scripts/akamai_v6_raw_data"):
+    def get_akamai_prefixes(self, ip_type: int = 4, raw_filev4_path = "./netbox/scripts/akamai_raw_data", raw_filev6_path = "./netbox/scripts/akamai_v6_raw_data"):
         if ip_type == 4:
 
             with open(raw_filev4_path, "r") as file:
