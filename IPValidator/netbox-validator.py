@@ -322,6 +322,7 @@ class IPAddressValidator(Script):
 
 
         if ip.is_global:
+            TAGS.append('public')
             if self.is_akamai(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cdn', 'akamai'])
             if self.is_aws(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'aws'])
             if self.is_azure(ip_str=ip_str, ip_type=ip_family): TAGS.extend(['cloud', 'azure'])
