@@ -286,16 +286,19 @@ class IPAddressValidator(Script):
         self.log_debug(data)
         
         if data.get("url", "").startswith("/api/ipam/ip-addresses/"):
-            ip_str = data['address'].split("/")[0]
+            ip_str = data.get("address", "").split("/")[0]
             input_type = "IP Address"
+            ip_obj= IPAddress.objects.get(pk=data.get("id"))
 
         elif data.get("url", "").startswith("/api/ipam/prefixes/"):
-            ip_str = data["prefix"].split("/")[0]
+            ip_str = data.get("prefix", "").split("/")[0]
             input_type = "Prefix"
+            ip_obj = Prefix.objects.get(pk=data.get("id"))
 
         elif data.get("url", "").startswith("/api/ipam/ip-ranges/"):
             ip_str = data["start_address"].split("/")[0]
             input_type = "IP Range"
+            ip_obj = IPRange.objects.get(pk=data.get("id"))
         
         else:
             raise AbortScript("Unexpected input data")
@@ -339,15 +342,9 @@ class IPAddressValidator(Script):
 
         self.log_success(TAGS)
 
+        for tag in set(TAGS):
+            ip_obj.tags.add(tag)
 
+        ip_obj.save()
 
-
-
-
-
-
-
-            
-        
-
-
+        self.log_success("Done")
