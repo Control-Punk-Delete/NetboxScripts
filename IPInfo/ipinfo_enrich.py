@@ -45,15 +45,15 @@ class IPInfoEnrichment(Script):
         self.log_debug(f"Request details for {ip_str}")
         details = handler.getDetails(ip_str)
         
-        
-        self.log_debug("Start object change")
-        asn = details.org.split(" ")[0]
-        self.log_debug(f"Edit asn: {asn}")
-        ip_obj.custom_field_data['asn'] = asn
+        if data.org:
+            self.log_debug("Start object change")
+            asn = details.org.split(" ")[0]
+            self.log_debug(f"Edit asn: {asn}")
+            ip_obj.custom_field_data['asn'] = asn
 
-        isp = details.org.split(" ", 1)[1]
-        self.log_debug(f"Edit ISP: {isp}")
-        ip_obj.custom_field_data['isp'] = isp
+            isp = details.org.split(" ", 1)[1]
+            self.log_debug(f"Edit ISP: {isp}")
+            ip_obj.custom_field_data['isp'] = isp
 
         city = details.city
         self.log_debug(f"Edit city: {city}")
