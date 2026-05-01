@@ -45,8 +45,12 @@ class IPInfoEnrichment(Script):
         self.log_debug("Request details")
         details = handler.getDetails(ip_str)
 
-        self.log_success(details.all)
-
+        ip_obj.cf['asn'] = details.org.split(" ")[0]
+        ip_obj.cf['isp'] = details.org.split(" ", 1)[1]
+        ip_obj.cf['city'] = details.city
+        ip_obj.cf['country'] = details.country
+        ip_obj.save()
+        
         
 
 
