@@ -1,0 +1,3 @@
+sudo /opt/netbox/venv/bin/pip install ipinfo
+
+echo "ipinfo" >> /opt/netbox/local_requirements.txt

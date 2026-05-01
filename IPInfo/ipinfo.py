@@ -4,7 +4,7 @@ from utilities.exceptions import AbortScript
 
 
 
-class IPInfo(Script):
+class IPInfoEnrichment(Script):
     class Meta(Script.Meta):
         name = "IP Info"
         description = "Enrich IP Address objects via IPInfo"
