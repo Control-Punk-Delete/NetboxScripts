@@ -42,13 +42,29 @@ class IPInfoEnrichment(Script):
         self.log_debug("Create handler")
         handler = ipinfo.getHandler(TOKEN)
 
-        self.log_debug("Request details")
+        self.log_debug(f"Request details for {ip_str}")
         details = handler.getDetails(ip_str)
+        
+        self.log_debug("Start object change")
 
-        ip_obj.cf['asn'] = details.org.split(" ")[0]
-        ip_obj.cf['isp'] = details.org.split(" ", 1)[1]
-        ip_obj.cf['city'] = details.city
-        ip_obj.cf['country'] = details.country
+
+        asn = details.org.split(" ")[0]
+        self.log_debug(f"Edit asn: {asn}")
+        ip_obj.cf['asn'] = asn
+
+        isp = details.org.split(" ", 1)[1]
+        self.log_debug(f"Edit ISP: {isp}")
+        ip_obj.cf['isp'] = isp
+
+        city = details.city
+        self.log_debug(f"Edit city: {city}")
+        ip_obj.cf['city'] = city
+
+        country = details.country
+        self.log_debug(f"Edit country: {country}")
+        ip_obj.cf['country'] = country
+
+        self.log_debug("Save object")
         ip_obj.save()
         
         
