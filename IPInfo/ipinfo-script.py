@@ -5,8 +5,11 @@ from utilities.exceptions import AbortScript
 
 
 class IPInfo(Script):
+    class Meta(Script.Meta):
+        name = "IP Info"
+        description = "Enrich IP Address objects via IPInfo"
+        scheduling_enabled = False
 
-    def run(self, data, commit):
-        
-        self.log_info(data)
+    def run(self, data, commit):        
+        self.log_debug(data)
 
