@@ -60,10 +60,18 @@ class DnsResolve(Script):
                                                                              'tenant':  tenant} )
                 resolved_ips_id.append(ipaddr.id)
 
-        #         # Для кожного ІР привʼязуємо домен який виконав резолв
-                ipaddr.custom_field_data['domains'] = list(set(dns_record_object.id + [ for dns in ipaddr.custom_field_data('domains', [] )]) )
+                # Для кожного ІР привʼязуємо домен який виконав резолв
+
+                    
+                    
                 if created:
                     self.log_debug(f"IP Address {ip} - created")
+                    ipaddr.custom_field_data['domains'] = [ dns_record_object.id ]
+                
+                else:
+                    exist_dns = ipaddr.custom_field_data['domains']
+                    ipaddr.custom_field_data['domains'] = list(set(exist_dns + [ dns_record_object.id ]))
+
                 
             
             
