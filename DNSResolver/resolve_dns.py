@@ -65,7 +65,7 @@ class DnsResolve(Script):
                 if created:
                     self.log_debug(f"IP Address {ip} - created")
 
-        #         ipaddr.save()
+                ipaddr.save()
 
         #         # Зберігаємо ІД ІР обʼєкту
                 
