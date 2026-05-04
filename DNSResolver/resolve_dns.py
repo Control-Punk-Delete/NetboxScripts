@@ -51,12 +51,13 @@ class DnsResolve(Script):
             dns_record_object.save()
             self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
         
-        # else:
+        else:
         #     # Перевірка чи створені обʼєкти ІР, якщо ні - створюємо 
-        #     for ip in resolved_ips:
-        #         ipaddr, created = IPAddress.objects.get_or_create( address= ip ,  
-        #                                                         defaults={ 'status': 'active',
-        #                                                                     'tenant':  Tenant.objects.get(pk=tenant_id)} )
+            for ip in resolved_ips:
+                ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
+                                                                  defaults={ 'status': 'active',
+                                                                             'tenant':  Tenant.objects.get(pk=tenant_id)} )
+                resolved_ips_id.append(ipaddr.id)
                 
         #         # Для кожного ІР привʼязуємо домен який виконав резолв
         #         ipaddr.custom_field_data['domains'].append(dns_record_object.id)
@@ -66,7 +67,7 @@ class DnsResolve(Script):
         #         ipaddr.save()
 
         #         # Зберігаємо ІД ІР обʼєкту
-        #         resolved_ips_id.append(ipaddr.id)
+                
             
             
         #     dns_record_object.custom_field_data['ip_address'] = list(set(resolved_ips_id + [ for ip in data.get('custom_fields', {'ip_address': []} ).get('ip_address') ]))
