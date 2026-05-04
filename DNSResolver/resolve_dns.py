@@ -64,10 +64,6 @@ class DnsResolve(Script):
         #         ipaddr.custom_field_data['domains'].append(dns_record_object.id)
                 if created:
                     self.log_debug(f"IP Address {ip} - created")
-
-                ipaddr.save()
-
-        #         # Зберігаємо ІД ІР обʼєкту
                 
             
             
