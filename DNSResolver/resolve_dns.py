@@ -43,13 +43,13 @@ class DnsResolve(Script):
         # Ініціалізація переліку ІД ІР обєктів, які необхідно привʼязати до ДНС запису 
         resolved_ips_id = []
 
-        self.log_debug(f"Find {len(resolved_ips)} ip addresses")
+        self.log_debug(f"Find {len(resolved_ips)} ip addresses: {resolved_ips_id}")
 
         # # Якщо резолв не вийшов - змінюємо статус домена на - inactive.
-        # if not resolved_ips:
-        #     dns_record_object.status = "inactive"
-        #     dns_record_object.save()
-        #     self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
+        if not resolved_ips:
+            dns_record_object.status = "inactive"
+            dns_record_object.save()
+            self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
         
         # else:
         #     # Перевірка чи створені обʼєкти ІР, якщо ні - створюємо 
