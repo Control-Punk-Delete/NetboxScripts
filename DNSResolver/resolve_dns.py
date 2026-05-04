@@ -57,9 +57,9 @@ class DnsResolve(Script):
             for ip in resolved_ips:
                 ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
                                                                   defaults={ 'status': 'active',
-                                                                             'tenant':  tenant)} )
+                                                                             'tenant':  tenant} )
                 resolved_ips_id.append(ipaddr.id)
-                
+
         #         # Для кожного ІР привʼязуємо домен який виконав резолв
         #         ipaddr.custom_field_data['domains'].append(dns_record_object.id)
                 if created:
