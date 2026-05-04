@@ -61,8 +61,8 @@ class DnsResolve(Script):
                 
         #         # Для кожного ІР привʼязуємо домен який виконав резолв
         #         ipaddr.custom_field_data['domains'].append(dns_record_object.id)
-        #         if created:
-        #             self.log_debug(f"IP Address {ip} - created")
+                if created:
+                    self.log_debug(f"IP Address {ip} - created")
 
         #         ipaddr.save()
 
