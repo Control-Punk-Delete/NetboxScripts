@@ -34,8 +34,9 @@ class DnsResolve(Script):
         dns_record_str = data.get('fqdn')[:-1]
         
         # Отримуємо Ідентифікатор Тенанта, щоб використатит його при створені ІР адрес які не існують
-        if data.get('tenant'):
-            tenant_id = data.get('tenant').get('id')
+        tenant = None  
+        if data['tenant']:  
+            tenant = Tenant.objects.get(pk=data['tenant']['id'])
 
         # Виконання резолву домена в ІР
         resolved_ips = self.resolve_dns_record(dns_record_str)
@@ -56,7 +57,7 @@ class DnsResolve(Script):
             for ip in resolved_ips:
                 ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
                                                                   defaults={ 'status': 'active',
-                                                                             'tenant':  Tenant.objects.get(pk=tenant_id, None)} )
+                                                                             'tenant':  tenant)} )
                 resolved_ips_id.append(ipaddr.id)
                 
         #         # Для кожного ІР привʼязуємо домен який виконав резолв
