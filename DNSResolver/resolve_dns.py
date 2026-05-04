@@ -69,8 +69,7 @@ class DnsResolve(Script):
                     ipaddr.custom_field_data['domains'] = [ dns_record_object.id ]
                 
                 else:
-                    exist_dns = ipaddr.custom_field_data['domains']
-                    ipaddr.custom_field_data['domains'] = list(set(exist_dns + [ dns_record_object.id ]))
+                    ipaddr.custom_field_data['domains'] = list(set(ipaddr.custom_field_data.get('domains', []) + [ dns_record_object.id ]))
 
                 
             
