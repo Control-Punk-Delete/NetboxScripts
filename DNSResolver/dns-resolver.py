@@ -46,7 +46,7 @@ class DnsResolve(Script):
         self.log_debug(f"Find {len(resolved_ips)} ip addresses: ")
 
         # # Якщо резолв не вийшов - змінюємо статус домена на - inactive.
-        if not resolved_ips:
+        if resolved_ips == []:
             dns_record_object.status = "inactive"
             dns_record_object.save()
             self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
