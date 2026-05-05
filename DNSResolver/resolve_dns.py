@@ -79,9 +79,6 @@ class DnsResolve(Script):
         existed_ips = dns_record_object.custom_field_data.get('ip_address', [])
         if not existed_ips:
             existed_ips = []
+
         dns_record_object.custom_field_data['ip_address'] = list(set( existed_ips + resolved_ips_id))
         dns_record_object.save()
-
-
-
-                
