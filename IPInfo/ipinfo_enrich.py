@@ -45,7 +45,7 @@ class IPInfoEnrichment(Script):
         self.log_debug(f"Request details for {ip_str}")
         details = handler.getDetails(ip_str)
         
-        if data.org:
+        if details.org:
             self.log_debug("Start object change")
             asn = details.org.split(" ")[0]
             self.log_debug(f"Edit asn: {asn}")
