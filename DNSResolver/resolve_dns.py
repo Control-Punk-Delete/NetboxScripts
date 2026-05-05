@@ -61,24 +61,34 @@ class DnsResolve(Script):
                 resolved_ips_id.append(ipaddr.id)
 
                 # Для кожного ІР привʼязуємо домен який виконав резолв
-
+                # Отримуємо перелік вже привʼязаних доменів
                 exist_domains = ipaddr.custom_field_data.get('domains')
+
+                # Якщо привʼязані домени відсутні перевизначаємо (чомусь .get [])
                 if not exist_domains:
                     exist_domains = []
 
                 self.log_debug(f"Existed domains: {exist_domains}, type: {type(exist_domains)}")
 
+                # Якщо даниого обʼєкта немає в вже наявному переліку додаємо його
                 if not dns_record_object.id in exist_domains:
                     self.log_debug(f"Append domain to list of links {dns_record_object.id}")
                     exist_domains.append(dns_record_object.id)
 
+                # Перевизначаємо обʼєкт та зберігаємо його
                 ipaddr.custom_field_data['domains'] = exist_domains
                 ipaddr.save()
 
         
+        # Отримуємо перелік існуючих повʼязаних обʼєктів ІР адрес
         existed_ips = dns_record_object.custom_field_data.get('ip_address', [])
+        self.log_debug(f"Existed IP Address: {existed_ips}")
+        
+        # Якщо такі обʼєкти відсутні перевизначаємо тип змінної 
         if not existed_ips:
             existed_ips = []
 
+        # Формуємо актуальни перелік ІР адресів (Існуючі + Ті які зарезолвились). Перевизначаємо та зберігаємо обʼєкт
         dns_record_object.custom_field_data['ip_address'] = list(set( existed_ips + resolved_ips_id))
+        self.log_debug(f"Update DNS Record : {existed_ips}")
         dns_record_object.save()
