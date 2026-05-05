@@ -64,7 +64,7 @@ class DnsResolve(Script):
 
                 exist_domains = ipaddr.custom_field_data.get('domains', []).append(dns_record_object.id)
 
-                if dns_record_object.id not in exist_domains:
+                if not dns_record_object.id in exist_domains:
                     exist_domains.append(dns_record_object.id)
 
                 ipaddr.custom_field_data['domains'] = exist_domains
