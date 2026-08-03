@@ -9,7 +9,7 @@ from extras.models import Tag
 
 from network_classifier import NetworkClassifier
 
-#classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
+classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
 
 class DnsResolve(Script):
 
