@@ -5,10 +5,11 @@
 - netbox_dns - plugin https://github.com/peteeckel/netbox-plugin-dns
 - ip_address - custom field | type multiselect object IP Address
 - dnspython - python lib
+- network-classifier - pip install git+https://github.com/control-punk-delete/network-classifier.git   
 
 ## Trigers
 
-Object: IP address 
+Object: DNS Record | DNS Zone ?? | IP Address | IP Range | Prefix
 Actions: Created
 
 ## Script input
@@ -17,6 +18,9 @@ DNS Record
 
 
 ## Script Logic
+
+
+
 
 
 1. Get DNS fqdn[:1]

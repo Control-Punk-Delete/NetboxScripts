@@ -1,0 +1,5 @@
+#https://www.iplocate.io/docs/quick-start
+
+sudo /opt/netbox/venv/bin/pip install python-iplocate
+
+echo "python-iplocate" >> /opt/netbox/local_requirements.txt

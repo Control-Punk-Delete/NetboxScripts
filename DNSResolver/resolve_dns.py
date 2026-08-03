@@ -1,13 +1,16 @@
 import dns.resolver
-import ipaddress
 
 from extras.scripts import *
 from ipam.models import IPAddress
 from netbox_dns.models import (Record)
 from utilities.exceptions import AbortScript
-from tenancy.models import Tenant  
+from tenancy.models import Tenant
+from extras.models import Tag 
 
- 
+from network_classifier import NetworkClassifier
+
+classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
+
 class DnsResolve(Script):
 
     class Meta(Script.Meta):
@@ -41,23 +44,41 @@ class DnsResolve(Script):
         # Виконання резолву домена в ІР
         resolved_ips = self.resolve_dns_record(dns_record_str)
 
-        # Ініціалізація переліку ІД ІР обєктів, які необхідно привʼязати до ДНС запису 
-        resolved_ips_id = []
+
 
         self.log_debug(f"Find {len(resolved_ips)} ip addresses: {resolved_ips}")
+
+        # Ініціалізація переліку ІД ІР обєктів, які необхідно привʼязати до ДНС запису 
+        resolved_ips_id = []
+        # Ініціалізація категорій для привʼязки до ДНС запису
+        dns_record_categories = [ ]
 
         # # Якщо резолв не вийшов - змінюємо статус домена на - inactive.
         if resolved_ips == []:
             dns_record_object.status = "inactive"
             dns_record_object.save()
             self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
+
+
         
         else:
+  
             # Перевірка чи створені обʼєкти ІР, якщо ні - створюємо 
             for ip in resolved_ips:
+
+                # Перевірка IP на належність до класу
+                clusifier_result = classifier.lookup(ip)
+
+                if clusifier_result.categories:
+                    dns_record_categories.append(*clusifier_result.categories)
+                    self.log_debug(f"{ip} has {clusifier_result.categories} categories")
+                    continue
+
+                # Cтворення IP Address з відповідними умовами (якщо він не належить відповідній категорії)
                 ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
                                                                   defaults={ 'status': 'active',
                                                                              'tenant':  tenant} )
+                
                 # Якщо обʼєкт був створений - встановлюємо відповідний source 
                 if created:
                   ipaddr.custom_field_data['source'] = "scanner"
@@ -94,4 +115,12 @@ class DnsResolve(Script):
         # Формуємо актуальни перелік ІР адресів (Існуючі + Ті які зарезолвились). Перевизначаємо та зберігаємо обʼєкт
         dns_record_object.custom_field_data['ip_address'] = list(set( existed_ips + resolved_ips_id))
         self.log_debug(f"Update DNS Record : {existed_ips}")
+
         dns_record_object.save()
+
+
+        if dns_record_categories:
+            self.log_debug("Add a categories tags")
+            for t in dns_record_categories:
+                tag, created = Tag.objects.get_or_create( name=t.lower(), defaults={'slug': t.lower()})
+                dns_record_object.tags.add(tag)
