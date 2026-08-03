@@ -53,6 +53,7 @@ class DnsResolve(Script):
         resolved_ips_id = []
         # Ініціалізація категорій для привʼязки до ДНС запису
         dns_record_categories = [ ]
+        dns_record_providers = [ ]
 
         # # Якщо резолв не вийшов - змінюємо статус домена на - inactive.
         if resolved_ips == []:
@@ -74,6 +75,7 @@ class DnsResolve(Script):
 
                 if clusifier_result.categories:
                     dns_record_categories.append(*clusifier_result.categories)
+                    dns_record_providers.append(*clusifier_result.providers)
                     self.log_debug(f"{ip} has {clusifier_result.categories} categories")
                     continue
 
@@ -128,3 +130,8 @@ class DnsResolve(Script):
             for t in dns_record_categories:
                 tag, created = Tag.objects.get_or_create( name=t.lower(), defaults={'slug': t.lower()})
                 dns_record_object.tags.add(tag)
+
+            self.log_debug(f"Add a categories provides tags: {dns_record_categories}")
+            for p in dns_record_providers:
+                tag, created = Tag.objects.get_or_create( name=p.lower(), defaults={'slug': p.lower()})
+                dns_record_object.tags.add(tag )               

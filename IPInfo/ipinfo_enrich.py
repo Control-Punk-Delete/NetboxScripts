@@ -2,8 +2,8 @@ import ipinfo
 from extras.scripts import Script
 from utilities.exceptions import AbortScript
 from ipam.models import IPAddress, IPRange, Prefix
-
-
+from extras.models import Tag 
+from network_classifier import NetworkClassifier
 
 class IPInfoEnrichment(Script):
     class Meta(Script.Meta):
@@ -12,38 +12,40 @@ class IPInfoEnrichment(Script):
         scheduling_enabled = False
 
     def run(self, data, commit):
-        
+        classifier = NetworkClassifier(auto_update=True)
 
         TOKEN = data.get("api_key", None)
 
         if not TOKEN:
             self.log_debug("API Key is not definded.")
 
-        ip_family = data.get("family").get("value")
-
         if data.get("url", "").startswith("/api/ipam/ip-addresses/"):
             ip_str = data.get("address", "").split("/")[0]
             ip_obj= IPAddress.objects.get(pk=data.get("id"))
-            input_type = "IP Address"
             
         elif data.get("url", "").startswith("/api/ipam/prefixes/"):
             ip_str = data.get("prefix", "").split("/")[0]
             ip_obj = Prefix.objects.get(pk=data.get("id"))
-            input_type = "Prefix"
             
         elif data.get("url", "").startswith("/api/ipam/ip-ranges/"):
             ip_str = data["start_address"].split("/")[0]
             ip_obj = IPRange.objects.get(pk=data.get("id"))
-            input_type = "IP Range"
             
         else:
             raise AbortScript("Unexpected input data")
 
         self.log_debug("Create handler")
         handler = ipinfo.getHandler(TOKEN)
-
         self.log_debug(f"Request details for {ip_str}")
         details = handler.getDetails(ip_str)
+
+
+        self.log_debug(f"Clusifier {ip_str} - class check")
+        clusifier_result = classifier.lookup(ip_str)
+
+        self.log_debug(clusifier_result)
+        cf_class = [*clusifier_result.categories]
+        cf_providers = [*clusifier_result.providers]
         
         if details.org:
             self.log_debug("Start object change")
@@ -63,11 +65,20 @@ class IPInfoEnrichment(Script):
         self.log_debug(f"Edit country: {country}")
         ip_obj.custom_field_data['country'] = country
 
-        
-
         if commit:
             self.log_debug("Save object")
             ip_obj.save()
+
+            if cf_class:
+                self.log_debug(f"Add a categories tags: {cf_class}")
+                for t in cf_class:
+                    tag, created = Tag.objects.get_or_create( name=t.lower(), defaults={'slug': t.lower()})
+                    ip_obj.tags.add(tag)
+
+                self.log_debug(f"Add a categories provides tags: {cf_providers}")
+                for p in cf_providers:
+                    tag, created = Tag.objects.get_or_create( name=p.lower(), defaults={'slug': p.lower()})
+                    ip_obj.tags.add(tag )
         
         
 
