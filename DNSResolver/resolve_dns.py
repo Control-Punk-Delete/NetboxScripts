@@ -9,8 +9,6 @@ from extras.models import Tag
 
 from network_classifier import NetworkClassifier
 
-classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
-
 class DnsResolve(Script):
 
     class Meta(Script.Meta):
@@ -27,7 +25,8 @@ class DnsResolve(Script):
 
 
     def run(self, data, commit):
-
+        classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
+        
         self.log_info(data)
         
         # Отримуємо обʼєкт ДНС запису для подальшого його зміни
