@@ -20,30 +20,32 @@ class DnsResolve(Script):
         try:
             return [answer.to_text() for answer in dns.resolver.resolve(record, 'A')]
         except Exception as e:
-            self.log_debug(f"Python DNS raise error: {e}")
+            self.log_warning(f"Python DNS raise error: {e}")
             return []
 
 
     def run(self, data, commit):
         classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
 
-        self.log_info(data)
+        self.log_info(f"Input data: {data}")
         
         # Отримуємо обʼєкт ДНС запису для подальшого його зміни
         dns_record_object = Record.objects.get(pk=data.get('id', None))
+        self.log_debg(f"Input DNS Record object id: {dns_record_object}")
 
         # Отримуємо рядок ДНС для виконання резолву
         dns_record_str = data.get('fqdn')[:-1]
+        self.log_debug(f"Extract Clear DNS Record: {dns_record_str}")
         
         # Отримуємо Ідентифікатор Тенанта, щоб використатит його при створені ІР адрес які не існують
         tenant = None  
         if data['tenant']:  
             tenant = Tenant.objects.get(pk=data['tenant']['id'])
+            self.log_debug(f"Extract Tenant: {tenant}")
 
         # Виконання резолву домена в ІР
+        self.log_debug("Try to resolve DNS Record")
         resolved_ips = self.resolve_dns_record(dns_record_str)
-
-
 
         self.log_debug(f"Find {len(resolved_ips)} ip addresses: {resolved_ips}")
 
@@ -57,9 +59,7 @@ class DnsResolve(Script):
             dns_record_object.status = "inactive"
             dns_record_object.save()
             self.log_success(f"DNS Record {dns_record_str} has no resolved IP Address")
-
-
-        
+      
         else:
   
             # Перевірка чи створені обʼєкти ІР, якщо ні - створюємо 
@@ -68,13 +68,11 @@ class DnsResolve(Script):
                 # Перевірка IP на належність до класу
                 self.log_debug(f"{ip} - class check")
                 clusifier_result = classifier.lookup(ip)
-
                 self.log_debug(f"{clusifier_result}")
                 
                 
 
                 if clusifier_result.categories:
-                    
                     dns_record_categories.append(*clusifier_result.categories)
                     self.log_debug(f"{ip} has {clusifier_result.categories} categories")
                     continue
@@ -86,6 +84,7 @@ class DnsResolve(Script):
                 
                 # Якщо обʼєкт був створений - встановлюємо відповідний source 
                 if created:
+                  self.log_info(f"Create new IP Address object: {ipaddr}")
                   ipaddr.custom_field_data['source'] = "scanner"
                  
                 resolved_ips_id.append(ipaddr.id)
@@ -125,7 +124,7 @@ class DnsResolve(Script):
 
 
         if dns_record_categories:
-            self.log_debug("Add a categories tags")
+            self.log_debug(f"Add a categories tags: {dns_record_categories}")
             for t in dns_record_categories:
                 tag, created = Tag.objects.get_or_create( name=t.lower(), defaults={'slug': t.lower()})
                 dns_record_object.tags.add(tag)
