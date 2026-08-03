@@ -7,7 +7,7 @@ from utilities.exceptions import AbortScript
 from tenancy.models import Tenant
 from extras.models import Tag 
 
-#from network_classifier import NetworkClassifier
+from network_classifier import NetworkClassifier
 
 #classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
 
