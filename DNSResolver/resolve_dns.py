@@ -7,9 +7,9 @@ from utilities.exceptions import AbortScript
 from tenancy.models import Tenant
 from extras.models import Tag 
 
-from network_classifier import NetworkClassifier
+#from network_classifier import NetworkClassifier
 
-classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
+#classifier = NetworkClassifier(auto_update=True)  # тягне дані за DEFAULT_SOURCE_URL
 
 class DnsResolve(Script):
 
@@ -67,12 +67,12 @@ class DnsResolve(Script):
             for ip in resolved_ips:
 
                 # Перевірка IP на належність до класу
-                clusifier_result = classifier.lookup(ip)
+                #clusifier_result = classifier.lookup(ip)
 
-                if clusifier_result.categories:
-                    dns_record_categories.append(*clusifier_result.categories)
-                    self.log_debug(f"{ip} has {clusifier_result.categories} categories")
-                    continue
+                #if clusifier_result.categories:
+                #    dns_record_categories.append(*clusifier_result.categories)
+                #    self.log_debug(f"{ip} has {clusifier_result.categories} categories")
+                #    continue
 
                 # Cтворення IP Address з відповідними умовами (якщо він не належить відповідній категорії)
                 ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
