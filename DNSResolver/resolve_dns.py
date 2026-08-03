@@ -66,9 +66,15 @@ class DnsResolve(Script):
             for ip in resolved_ips:
 
                 # Перевірка IP на належність до класу
+                self.log_debug(f"{ip} - class check")
                 clusifier_result = classifier.lookup(ip)
 
+                self.log_debug(f"{clusifier_result}")
+                
+                
+
                 if clusifier_result.categories:
+                    
                     dns_record_categories.append(*clusifier_result.categories)
                     self.log_debug(f"{ip} has {clusifier_result.categories} categories")
                     continue
