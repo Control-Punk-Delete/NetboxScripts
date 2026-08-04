@@ -31,7 +31,7 @@ class DnsResolve(Script):
         
         # Отримуємо обʼєкт ДНС запису для подальшого його зміни
         dns_record_object = Record.objects.get(pk=data.get('id', None))
-        self.log_debg(f"Input DNS Record object id: {dns_record_object}")
+        self.log_debug(f"Input DNS Record object id: {dns_record_object}")
 
         # Отримуємо рядок ДНС для виконання резолву
         dns_record_str = data.get('fqdn')[:-1]
