@@ -46,16 +46,21 @@ class IPInfoEnrichment(Script):
         self.log_debug(clusifier_result)
         cf_class = [*clusifier_result.categories]
         cf_providers = [*clusifier_result.providers]
-        
-        if details.org:
-            self.log_debug("Start object change")
-            asn = details.org.split(" ")[0]
-            self.log_debug(f"Edit asn: {asn}")
-            ip_obj.custom_field_data['asn'] = asn
 
-            isp = details.org.split(" ", 1)[1]
-            self.log_debug(f"Edit ISP: {isp}")
-            ip_obj.custom_field_data['isp'] = isp
+        try:
+        
+            if details.org:
+                self.log_debug("Start object change")
+                asn = details.org.split(" ")[0]
+                self.log_debug(f"Edit asn: {asn}")
+                ip_obj.custom_field_data['asn'] = asn
+
+                isp = details.org.split(" ", 1)[1]
+                AttributeError
+                ip_obj.custom_field_data['isp'] = isp
+        except AttributeError:
+            self.log_debug(f"Missing org in ipinfo results")
+            
 
         city = details.city
         self.log_debug(f"Edit city: {city}")
