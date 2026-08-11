@@ -67,7 +67,7 @@ class DnsResolve(Script):
             for ip in resolved_ips:
 
                 # Перевірка ІР чи публічна
-                ip_obj = ipaddress.ip_address(str(ip))
+                ip_obj = ipaddress.ip_address(ip)
                 
                 if ip_obj.is_loopback:
                     dns_record_categories.append("loopback-ip")
@@ -76,7 +76,7 @@ class DnsResolve(Script):
                     continue
                     
                 elif ip_obj.is_private:
-                    dns_record_categories.append("private-ip)
+                    dns_record_categories.append("private-ip")
                     dns_record_categories.append("error")                                                 
                     self.log_debug("Returned IP Address is Private")
                     continue
