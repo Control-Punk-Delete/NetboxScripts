@@ -67,7 +67,7 @@ class DnsResolve(Script):
             for ip in resolved_ips:
 
                 # Перевірка ІР чи публічна
-                ip_obj = ipaddress.ip_address(ip)
+                ip_obj = ipaddress.ip_address(str(ip))
                 
                 if ip_obj.is_loopback:
                     dns_record_categories.append("loopback-ip")
