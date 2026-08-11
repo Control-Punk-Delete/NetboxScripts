@@ -82,7 +82,8 @@ class DnsResolve(Script):
                 # Cтворення IP Address з відповідними умовами (якщо він не належить відповідній категорії)
                 ipaddr, created = IPAddress.objects.get_or_create(address= ip ,  
                                                                   defaults={ 'status': 'active',
-                                                                             'tenant':  tenant} )
+                                                                             'tenant':  tenant, 
+                                                                             'description': f"Отримано в наслідок автоматичного резолву домена {dns_record_str}"} )
                 
                 # Якщо обʼєкт був створений - встановлюємо відповідний source 
                 if created:
