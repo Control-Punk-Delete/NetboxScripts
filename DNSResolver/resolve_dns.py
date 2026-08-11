@@ -1,5 +1,5 @@
 import dns.resolver
-
+import ipaddress
 from extras.scripts import *
 from ipam.models import IPAddress
 from netbox_dns.models import (Record)
@@ -66,6 +66,39 @@ class DnsResolve(Script):
             # Перевірка чи створені обʼєкти ІР, якщо ні - створюємо 
             for ip in resolved_ips:
 
+                # Перевірка ІР чи публічна
+                ip_obj = ipaddress.ip_address(ip)
+                
+                if ip_obj.is_loopback:
+                    dns_record_categories.append("loopback-ip")
+                    dns_record_categories.append("error")
+                    self.log_debug("Returned IP Address is Loopback")
+                    continue
+                    
+                elif ip_obj.is_private:
+                    dns_record_categories.append("private-ip)
+                    dns_record_categories.append("error")                                                 
+                    self.log_debug("Returned IP Address is Private")
+                    continue
+                    
+                elif ip_obj.is_multicast:
+                    dns_record_categories.append("multicast-ip")
+                    dns_record_categories.append("error")
+                    self.log_debug("Returned IP Address is multicast")
+                    continue
+                    
+                elif ip_obj.is_link_local:
+                    dns_record_categories.append("link-local-ip")
+                    dns_record_categories.append("error")
+                    self.log_debug("Returned IP Address is Link Local")
+                    continue
+                    
+                elif ip_obj.is_reserved:
+                    dns_record_categories.append("reserved-ip")
+                    dns_record_categories.append("error")
+                    self.log_debug("Returned IP Address is reserved")
+                    continue
+                
                 # Перевірка IP на належність до класу
                 self.log_debug(f"{ip} - class check")
                 clusifier_result = classifier.lookup(ip)
