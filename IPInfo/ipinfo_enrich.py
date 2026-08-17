@@ -60,15 +60,20 @@ class IPInfoEnrichment(Script):
                 ip_obj.custom_field_data['isp'] = isp
         except AttributeError:
             self.log_debug(f"Missing org in ipinfo results")
-            
+                    
+        try:
+            city = details.city
+            self.log_debug(f"Edit city: {city}")
+            ip_obj.custom_field_data['city'] = city
+        except AttributeError:
+            self.log_debug(f"Missing city in ipinfo results")
 
-        city = details.city
-        self.log_debug(f"Edit city: {city}")
-        ip_obj.custom_field_data['city'] = city
-
-        country = details.country
-        self.log_debug(f"Edit country: {country}")
-        ip_obj.custom_field_data['country'] = country
+        try:
+            country = details.country
+            self.log_debug(f"Edit country: {country}")
+            ip_obj.custom_field_data['country'] = country
+        except AttributeError:
+            self.log_debug(f"Missing country in ipinfo results")
 
         if commit:
             self.log_debug("Save object")
