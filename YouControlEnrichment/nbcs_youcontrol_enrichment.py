@@ -88,8 +88,8 @@ class YouControlEnrichment(Script):
                             you_control_data["tenant_city"] = you_control_data["tenant_address"].split(",")[-3].strip()
                             you_control_data["tenant_region"] = you_control_data["tenant_address"].split(",")[2].strip()
                         else:
-                            you_control_data["tenant_city"] = None
-                            you_control_data["tenant_region"] = None
+                            you_control_data["tenant_city"] = ""
+                            you_control_data["tenant_region"] = ""
                             
 
                     if key == "Перелік засновників/учасників юридичної особи":
