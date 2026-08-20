@@ -132,7 +132,10 @@ class YouControlEnrichment(Script):
         else:
             if youcontrol_parsed_data["tenant_region"]:
                 search_word = youcontrol_parsed_data.get("tenant_region", "").split(" ")[0]
-            self.log_debug(f"Region search word: {search_word}")
+                self.log_debug(f"Region search word: {search_word}")
+            else:
+                search_word = "Відсутній в YouControl"
+                self.log_debug(f"Region search word is empty: {search_word}")
 
         region = Region.objects.filter(name__icontains=search_word).first()
 
