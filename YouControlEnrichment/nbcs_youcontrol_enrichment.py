@@ -83,9 +83,14 @@ class YouControlEnrichment(Script):
                         you_control_data["tenant_kved_secondary"] = list( i for i in values[30:-3] if i!='')
 
                     if key == "Контактна інформація":
-                        you_control_data["tenant_address"] = values[3].strip()
-                        you_control_data["tenant_city"] = you_control_data["tenant_address"].split(",")[-3].strip()
-                        you_control_data["tenant_region"] = you_control_data["tenant_address"].split(",")[2].strip()
+                        you_control_data["tenant_address"] = values[3].strip() or None
+                        if you_control_data["tenant_address"]:
+                            you_control_data["tenant_city"] = you_control_data["tenant_address"].split(",")[-3].strip()
+                            you_control_data["tenant_region"] = you_control_data["tenant_address"].split(",")[2].strip()
+                        else:
+                            you_control_data["tenant_city"] = None
+                            you_control_data["tenant_region"] = None
+                            
 
                     if key == "Перелік засновників/учасників юридичної особи":
                         you_control_data["parent_tenant_name"] = values[0].strip()
