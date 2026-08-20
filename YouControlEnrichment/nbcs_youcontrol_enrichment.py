@@ -88,8 +88,8 @@ class YouControlEnrichment(Script):
                             you_control_data["tenant_city"] = you_control_data["tenant_address"].split(",")[-3].strip()
                             you_control_data["tenant_region"] = you_control_data["tenant_address"].split(",")[2].strip()
                         else:
-                            you_control_data["tenant_city"] = ""
-                            you_control_data["tenant_region"] = ""
+                            you_control_data["tenant_city"] = None
+                            you_control_data["tenant_region"] = None
                             
 
                     if key == "Перелік засновників/учасників юридичної особи":
@@ -124,7 +124,7 @@ class YouControlEnrichment(Script):
             
         
         self.log_info(f"YouControl Data: {youcontrol_parsed_data}")
-        tenant.custom_field_data["full_address"] = youcontrol_parsed_data.get("tenant_address")
+        tenant.custom_field_data["full_address"] = youcontrol_parsed_data.get("tenant_address", "")
 
         if youcontrol_parsed_data.get("tenant_region", "").startswith("місто"):
             search_word = youcontrol_parsed_data.get("tenant_region", "").split(" ")[1]
