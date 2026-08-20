@@ -126,7 +126,7 @@ class YouControlEnrichment(Script):
         self.log_info(f"YouControl Data: {youcontrol_parsed_data}")
         tenant.custom_field_data["full_address"] = youcontrol_parsed_data.get("tenant_address", "")
 
-        if youcontrol_parsed_data.get("tenant_region", "").startswith("місто"):
+        if youcontrol_parsed_data["tenant_region"] and youcontrol_parsed_data.get("tenant_region", "").startswith("місто"):
             search_word = youcontrol_parsed_data.get("tenant_region", "").split(" ")[1]
             self.log_debug(f"Region search word: {search_word}")
         else:
