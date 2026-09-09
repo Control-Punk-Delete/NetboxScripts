@@ -73,14 +73,20 @@ class GoogleSyncronization(Script):
         if data.get('tenant'):
             tenant_id = data.get('tenant').get('id')
         else:
-            raise AbortScript(f"IP Address {data.get("display")} not assign to any Tenant.s")
+            raise AbortScript(f"IP Address {data.get("display")} not assign to any Tenant.")
 
         # Отримання даних про IP Address який необхідно передати
         IP_ADDRESS_OBJECT = IPAddress.objects.get(pk=ip_id)
 
         # Отримання даних про Tenant якому належить цей актив
         TENANT_OBJECT = Tenant.objects.get(pk=tenant_id)
-        
+
+        # Отримання даних про регіон, в якому Tenant
+        REGION_ID = TENANT_OBJECT.cf.get("region", {}).slug
+        self.log_debug(f"Tenant's region id is: {REGION_ID}")
+        if not REGION_ID in ("ua-30", "ua-32"):
+            raise AbortScript(f"IP Address belong to Tenant that not in Kyiv or Kyiv Region")
+            
         # Отримання даних про контактну особу даного тенанта
         CONTACT_ASSIGMENT_OBJECT = TENANT_OBJECT.contacts.filter(priority=ContactPriorityChoices.PRIORITY_PRIMARY).first()
         
